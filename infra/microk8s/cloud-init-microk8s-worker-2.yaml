@@ -1,0 +1,33 @@
+#cloud-config
+hostname: "microk8s-worker-2"
+users:
+  - default
+  - name: dcasati
+    groups:
+      - sudo
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDQpkMXPt5qRxS/Ppcfb6L9cnZXNH1lcdqonRfisgy0qpbmJ1pyC0u4CN6jDxqPKsxI9XoJ/i0rlmGrOhZqnd/l1mzAFRelsGr9Z09632RNOYXNLsv4a5C7dKC4vusZnGLNFlQG+nWkuLuTyJD8WenTfbhVkzTvL9FzZaXiMGQxeCZzzfSMU1O99onItn4Qj6VFXAKP1PbUMJckNXtuRBNMMFbVgNgOihClED6b5Yrj43lWO4lw0kbDx+PpzU+aOmixIUZ4tYmMOOEzD41q6NM/+f3TLuPGidktRjKX3fC4cffeNhrxA//YGykg3BvFWy7j48zuktqaqWyzgzFatw8Bp8sf8bo0lWSe00w8ui/HQisUUoywPYb8kCPg6fikH+N+4IHkha1aJhSblvxsVGfA2j8xbjsurlczFJgGpf9RYJJuq5WVjWtpo8Psng1fVfTRoOsHivNcCNzO6cNJ49bgojfCNx2BWUJB43+7JCFQ535UyspCYiHJq5qrPaEPI6U= dcasati@WIN-THINK24
+    sudo: ALL=(ALL) NOPASSWD:ALL
+runcmd:
+    - apt update
+    - apt install -y qemu-guest-agent net-tools
+    - timedatectl set-timezone America/Edmonton
+    - systemctl start qemu-guest-agent
+    # microk8s
+    - snap install microk8s --classic
+    - microk8s status --wait-ready
+    
+    
+    
+    - mkdir -p /home/dcasati/.kube
+    - microk8s config > /home/dcasati/.kube/config
+    - chown -f -R dcasati /home/dcasati/.kube
+    - usermod -a -G microk8s dcasati
+    - snap alias microk8s.kubectl kubectl
+    # argoCD
+    - microk8s helm3 repo add argo https://argoproj.github.io/argo-helm
+    - microk8s helm3 repo update
+    - microk8s kubectl create namespace argocd
+    - microk8s helm3 install argocd argo/argo-cd -n argocd
+    - echo "done" > /tmp/cloud-config.done
