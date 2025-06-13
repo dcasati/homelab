@@ -31,7 +31,8 @@ data:
         "mxchip/telemetry"
       ]
       data_format = "json"
-      json_string_fields = ["device_id", "location"]
+      json_string_fields = ["device_id", "location", "device"]  # Added "device"
+      tag_keys = ["device", "topic"]  # Make device a tag for better grouping
     
     # InfluxDB Output Plugin
     [[outputs.influxdb]]
