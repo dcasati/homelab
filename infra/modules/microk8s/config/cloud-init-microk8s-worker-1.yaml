@@ -1,0 +1,48 @@
+#cloud-config
+hostname: "microk8s-worker-1"
+package_update: true
+package_upgrade: true
+packages:
+  - qemu-guest-agent
+  - net-tools
+users:
+  - default
+  - name: dcasati
+    groups:
+      - sudo
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINY8q+Ww2leih7SMZQqaM8a7CyCD1rI8EJ9oKeQbDjq9 dcasati@WIN-THINK24
+    sudo: ALL=(ALL) NOPASSWD:ALL
+
+write_files:
+  - path: /usr/local/bin/setup-microk8s.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      set -e
+      
+      # Install MicroK8s
+      snap install microk8s --classic
+      microk8s status --wait-ready
+      
+      # Setup user
+      microk8s add-user dcasati || true
+      usermod -a -G microk8s dcasati
+      
+      # Setup kubectl
+      mkdir -p /home/dcasati/.kube
+      microk8s config > /home/dcasati/.kube/config
+      chown -R dcasati:dcasati /home/dcasati/.kube
+      chmod 600 /home/dcasati/.kube/config
+      snap alias microk8s.kubectl kubectl
+      
+      echo "MicroK8s setup complete"
+
+runcmd:
+    - apt update
+    - apt install -y qemu-guest-agent net-tools
+    - timedatectl set-timezone America/Edmonton
+    - systemctl start qemu-guest-agent
+    - /usr/local/bin/setup-microk8s.sh
+    - echo "done" > /tmp/cloud-config.done
