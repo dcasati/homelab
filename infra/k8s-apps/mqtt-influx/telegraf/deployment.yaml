@@ -28,6 +28,7 @@ data:
         "sensors/+/humidity",
         "sensors/+/pressure",
         "home/+/+",
+        "mxchip/telemetry"
       ]
       data_format = "json"
       json_string_fields = ["device_id", "location"]
