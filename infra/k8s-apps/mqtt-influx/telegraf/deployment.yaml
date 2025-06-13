@@ -22,7 +22,7 @@ data:
     
     # MQTT Consumer Input Plugin
     [[inputs.mqtt_consumer]]
-      servers = ["tcp://mosquitto-service:1883"]
+      servers = ["tcp://mosquitto-service.iot-stack:1883"]
       topics = [
         "sensors/+/temperature",
         "sensors/+/humidity",
@@ -34,7 +34,7 @@ data:
     
     # InfluxDB Output Plugin
     [[outputs.influxdb]]
-      urls = ["http://influxdb-service:8086"]
+      urls = ["http://influxdb-service.iot-stack:8086"]
       database = "iot"
       username = "iot_user"
       password = "iot_password"

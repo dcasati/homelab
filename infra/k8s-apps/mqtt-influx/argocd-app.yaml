@@ -8,7 +8,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: git@github.com:dcasati/homelab.git  # Changed to SSH URL
+    repoURL: git@github.com:dcasati/homelab.git 
     targetRevision: HEAD
     path: infra/k8s-apps/mqtt-influx
     directory:
