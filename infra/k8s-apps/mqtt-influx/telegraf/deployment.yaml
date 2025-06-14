@@ -27,6 +27,7 @@ data:
         "sensors/+/temperature",
         "sensors/+/humidity",
         "sensors/+/pressure",
+        "sensors/#",
         "home/+/+",
         "mxchip/telemetry"
       ]
