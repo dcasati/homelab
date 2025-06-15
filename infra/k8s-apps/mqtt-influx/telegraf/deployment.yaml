@@ -33,18 +33,13 @@ data:
       ]
       data_format = "json"
       json_string_fields = ["device_id", "location", "model"]
-      tag_keys = ["device", "topic"]
+      tag_keys = ["model", "topic"]  # Promote model to tag
 
-    # Rename model field to device
+    # Rename model tag to device tag
     [[processors.rename]]
       [[processors.rename.replace]]
-        field = "model"
+        tag = "model"
         dest = "device"
-
-    # Convert device to tag
-    [[processors.converter]]
-      [processors.converter.tags]
-        string = ["device"]
 
     # InfluxDB Output Plugin
     [[outputs.influxdb]]
