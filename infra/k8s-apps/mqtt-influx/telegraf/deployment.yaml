@@ -7,7 +7,7 @@ data:
   telegraf.conf: |
     [global_tags]
       environment = "homelab"
-    
+
     [agent]
       interval = "10s"
       round_interval = true
@@ -32,14 +32,28 @@ data:
         "mxchip/telemetry"
       ]
       data_format = "json"
-      json_string_fields = ["device_id", "location", "model"]
-      tag_keys = ["model", "topic"]  # Promote model to tag
+      json_string_fields = ["device_id", "location", "model", "id", "channel"]
+      tag_keys = ["model", "topic", "id"]
 
     # Rename model tag to device tag
     [[processors.rename]]
       [[processors.rename.replace]]
         tag = "model"
         dest = "device"
+
+    # Add location tag based on device name
+    [[processors.enum]]
+      namepass = ["mqtt_consumer"]
+      [[processors.enum.mapping]]
+        tag = "device"
+        dest = "location"
+        [processors.enum.mapping.value_mappings]
+          "Acurite-5n1" = "outdoor"
+          "Acurite-Tower" = "indoor"
+          "Ambientweather-F007TH" = "indoor"
+          "garage-1" = "garage"
+          "basement-001" = "basement"
+          "mxchip" = "indoor"
 
     # InfluxDB Output Plugin
     [[outputs.influxdb]]
