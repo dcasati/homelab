@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: sunrise-sunset-writer
+  namespace: iot-stack
+spec:
+  schedule: "0 6 * * *"  # Run daily at 6:00 AM
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: sun-writer
+            image: your-registry/sunrise-influx:latest
+            env:
+            - name: LAT
+              value: "51.0447"
+            - name: LON
+              value: "-114.0719"
+            - name: TZ
+              value: "America/Edmonton"
+            - name: INFLUX_HOST
+              value: "http://influxdb-service.iot-stack:8086"
+            - name: INFLUX_DB
+              value: "iot"
+          restartPolicy: OnFailure
+
