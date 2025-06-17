@@ -55,6 +55,11 @@ data:
           "basement-001" = "basement"
           "mxchip" = "indoor"
 
+    # Add wind direction cardinal field
+    [[processors.starlark]]
+      namepass = ["mqtt_consumer"]
+      source = "/etc/telegraf/wind_direction.star"
+
     # InfluxDB Output Plugin
     [[outputs.influxdb]]
       urls = ["http://influxdb-service.iot-stack:8086"]
@@ -64,7 +69,30 @@ data:
       retention_policy = ""
       write_consistency = "any"
       timeout = "5s"
+
 ---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wind-direction-script
+  namespace: iot-stack
+data:
+  wind_direction.star: |
+    def apply(metric):
+        deg = metric.fields.get("wind_dir_deg")
+        if deg is None:
+            return metric
+        directions = [
+            "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+            "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"
+        ]
+        index = int((deg + 11.25) % 360 / 22.5)
+        metric.fields["wind_dir_cardinal"] = directions[index]
+        return metric
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -87,7 +115,11 @@ spec:
         image: telegraf:1.28
         volumeMounts:
         - name: telegraf-config
-          mountPath: /etc/telegraf
+          mountPath: /etc/telegraf/telegraf.conf
+          subPath: telegraf.conf
+        - name: wind-direction-script
+          mountPath: /etc/telegraf/wind_direction.star
+          subPath: wind_direction.star
         resources:
           requests:
             memory: "128Mi"
@@ -99,3 +131,6 @@ spec:
       - name: telegraf-config
         configMap:
           name: telegraf-config
+      - name: wind-direction-script
+        configMap:
+          name: wind-direction-script
