@@ -55,7 +55,7 @@ data:
           "basement-001" = "basement"
           "mxchip" = "indoor"
 
-    # Add wind direction cardinal field
+    # Add wind direction cardinal tag using starlark
     [[processors.starlark]]
       namepass = ["mqtt_consumer"]
       source = "/etc/telegraf/wind_direction.star"
@@ -88,7 +88,7 @@ data:
             "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"
         ]
         index = int((deg + 11.25) % 360 / 22.5)
-        metric.fields["wind_dir_cardinal"] = directions[index]
+        metric.tags["wind_dir_cardinal"] = directions[index]
         return metric
 
 ---
