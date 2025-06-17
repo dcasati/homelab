@@ -58,7 +58,7 @@ data:
     # Add wind direction cardinal tag using starlark
     [[processors.starlark]]
       namepass = ["mqtt_consumer"]
-      source = "/etc/telegraf/wind_direction.star"
+      script = "/etc/telegraf/wind_direction.star"
 
     # InfluxDB Output Plugin
     [[outputs.influxdb]]
@@ -70,7 +70,26 @@ data:
       write_consistency = "any"
       timeout = "5s"
 ---
+kind: ConfigMap
+metadata:
+  name: wind-direction-script
+  namespace: iot-stack
+data:
+  wind_direction.star: |
+    def apply(metric):
+        deg = metric.fields.get("wind_dir_deg")
+        if deg is None:
+            return metric
 
+        directions = [
+            "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+            "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"
+        ]
+
+        index = int((deg + 11.25) % 360 / 22.5)
+        metric.tags["wind_dir_cardinal"] = directions[index]
+        return metric
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
