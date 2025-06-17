@@ -20,7 +20,6 @@ data:
       hostname = ""
       omit_hostname = false
 
-    # MQTT Consumer Input Plugin
     [[inputs.mqtt_consumer]]
       servers = ["tcp://mosquitto-service.iot-stack:1883"]
       topics = [
@@ -35,13 +34,11 @@ data:
       json_string_fields = ["device_id", "location", "model", "id", "channel"]
       tag_keys = ["model", "topic", "id"]
 
-    # Rename model tag to device tag
     [[processors.rename]]
       [[processors.rename.replace]]
         tag = "model"
         dest = "device"
 
-    # Add location tag based on device name
     [[processors.enum]]
       namepass = ["mqtt_consumer"]
       [[processors.enum.mapping]]
@@ -55,7 +52,24 @@ data:
           "basement-001" = "basement"
           "mxchip" = "indoor"
 
-    # InfluxDB Output Plugin
+    [[processors.starlark]]
+      namepass = ["mqtt_consumer"]
+      script = """
+def apply(metric):
+    deg = metric.fields.get("wind_dir_deg")
+    if deg is None:
+        return metric
+
+    directions = [
+        "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+        "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"
+    ]
+
+    index = int((deg + 11.25) % 360 / 22.5)
+    metric.tags["wind_dir_cardinal"] = directions[index]
+    return metric
+"""
+
     [[outputs.influxdb]]
       urls = ["http://influxdb-service.iot-stack:8086"]
       database = "iot"
@@ -87,7 +101,8 @@ spec:
         image: telegraf:1.28
         volumeMounts:
         - name: telegraf-config
-          mountPath: /etc/telegraf
+          mountPath: /etc/telegraf/telegraf.conf
+          subPath: telegraf.conf
         resources:
           requests:
             memory: "128Mi"
