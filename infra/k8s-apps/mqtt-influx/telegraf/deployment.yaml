@@ -54,7 +54,7 @@ data:
 
     [[processors.starlark]]
       namepass = ["mqtt_consumer"]
-      script = '''
+      script = """
 def apply(metric):
     deg = metric.fields.get("wind_dir_deg")
     if deg is None:
@@ -68,7 +68,7 @@ def apply(metric):
     index = int((deg + 11.25) % 360 / 22.5)
     metric.tags["wind_dir_cardinal"] = directions[index]
     return metric
-'''
+"""
 
     [[outputs.influxdb]]
       urls = ["http://influxdb-service.iot-stack:8086"]
