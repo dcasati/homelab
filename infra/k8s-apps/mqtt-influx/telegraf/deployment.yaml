@@ -70,6 +70,7 @@ data:
       write_consistency = "any"
       timeout = "5s"
 ---
+apiVersion: v1
 kind: ConfigMap
 metadata:
   name: wind-direction-script
