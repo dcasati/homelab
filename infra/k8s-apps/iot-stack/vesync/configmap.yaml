@@ -16,7 +16,7 @@ data:
     PASSWORD = os.getenv("VESYNC_PASSWORD")
     INFLUXDB_HOST = os.getenv("INFLUXDB_HOST", "influxdb-service.iot-stack.svc.cluster.local")
     INFLUXDB_PORT = int(os.getenv("INFLUXDB_PORT", "8086"))
-    INFLUXDB_DATABASE = os.getenv("INFLUXDB_DATABASE", "homelab")
+    INFLUXDB_DATABASE = os.getenv("INFLUXDB_DATABASE", "iot")
 
     def main():
         # Initialize VeSync
