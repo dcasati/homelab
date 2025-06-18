@@ -1,3 +1,4 @@
+# base image Python 3.11 slim
 FROM python:3.11-slim
 
 # Set working directory
