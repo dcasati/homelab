@@ -1,5 +1,5 @@
-# Use homelab base image
-FROM ghcr.io/dcasati/homelab-base:latest
+# Use python base image - update this SHA when base image changes
+FROM ghcr.io/dcasati/python-base:sha-abc123
 
 # Set working directory (already set in base image)
 WORKDIR /app

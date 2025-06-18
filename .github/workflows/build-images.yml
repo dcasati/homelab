@@ -68,7 +68,6 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr
             type=raw,value=sha-{{sha}},enable=true
-            type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push
         uses: docker/build-push-action@v5
@@ -105,7 +104,6 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr
             type=raw,value=sha-{{sha}},enable=true
-            type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push
         uses: docker/build-push-action@v5
@@ -137,12 +135,11 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/dcasati/homelab-base
+          images: ${{ env.REGISTRY }}/dcasati/python-base
           tags: |
             type=ref,event=branch
             type=ref,event=pr
             type=raw,value=sha-{{sha}},enable=true
-            type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push
         uses: docker/build-push-action@v5
