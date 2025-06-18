@@ -30,7 +30,7 @@ spec:
             - name: INFLUXDB_PORT
               value: "8086"
             - name: INFLUXDB_DATABASE
-              value: "homelab"
+              value: "iot"
             volumeMounts:
             - name: vesync-script
               mountPath: /app
