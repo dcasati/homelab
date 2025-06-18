@@ -1,0 +1,73 @@
+import os
+from datetime import datetime, timedelta
+import pandas as pd
+from influxdb import InfluxDBClient as InfluxQLClient
+
+# ---- CONFIG ----
+INFLUX_HOST = os.getenv("INFLUX_HOST", "influxdb.iot-stack.svc")
+INFLUX_PORT = int(os.getenv("INFLUX_PORT", "8086"))
+INFLUX_DB = os.getenv("INFLUX_DB", "iot")
+DEVICE_NAME = "Acurite-5n1"
+
+# ---- INIT CLIENT ----
+client = InfluxQLClient(host=INFLUX_HOST, port=INFLUX_PORT, database=INFLUX_DB)
+
+def query_measurement(field):
+    now = datetime.utcnow()
+    start = now - timedelta(minutes=30)
+    query = f"""
+        SELECT "{field}" FROM "mqtt_consumer"
+        WHERE "device" = '{DEVICE_NAME}' AND time >= {int(start.timestamp())}s AND time <= {int(now.timestamp())}s
+        ORDER BY time ASC
+    """
+    result = client.query(query)
+    points = list(result.get_points())
+
+    if points:
+        df = pd.DataFrame(points)
+        df["time"] = pd.to_datetime(df["time"])
+        return df[["time", field]]
+    else:
+        return pd.DataFrame(columns=["time", field])
+
+# ---- QUERY FIELDS ----
+temperature = query_measurement("temperature_F")
+humidity = query_measurement("humidity")
+pressure = query_measurement("pressure")
+
+# ---- MERGE + INDEX ----
+df = temperature.merge(humidity, on="time").merge(pressure, on="time")
+df.set_index("time", inplace=True)
+
+# ---- ANALYSIS ----
+forecast = "Clear conditions"
+
+if len(df) > 2:
+    temp_delta = df["temperature_C"].iloc[-1] - df["temperature_C"].iloc[0]
+    hum_delta = df["humidity"].iloc[-1] - df["humidity"].iloc[0]
+    press_delta = df["pressure"].iloc[-1] - df["pressure"].iloc[0]
+
+    if press_delta < -1 and hum_delta > 5 and temp_delta < -1:
+        forecast = "Rain likely soon"
+    elif press_delta > 1 and temp_delta > 0:
+        forecast = "Improving conditions"
+    elif hum_delta > 10 and temp_delta < 0:
+        forecast = "Possibility of fog"
+    elif abs(press_delta) < 0.5:
+        forecast = "Stable conditions"
+
+print(f"Forecast: {forecast}")
+
+# ---- OPTIONAL: Write forecast back to InfluxDB 1.8 ----
+timestamp = datetime.utcnow().isoformat("T") + "Z"
+json_body = [{
+    "measurement": "forecast_summary",
+    "time": timestamp,
+    "fields": {
+        "forecast": forecast
+    }
+}]
+client.write_points(json_body)
+
+client.close()
+
