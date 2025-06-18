@@ -1,4 +1,4 @@
-# base image: Python 3.11 slim
+# Base image: Python 3.11 slim for homelab services
 FROM python:3.11-slim
 
 WORKDIR /app
