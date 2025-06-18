@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - namespace.yaml
+  - influxdb/deployment.yaml
+  - mosquitto/deployment.yaml
+  - telegraf/deployment.yaml
+  - forecasting/configmap.yaml
+  - forecasting/cronjob.yaml
+  - sunrise/sunrise-cronjob.yaml
+
+commonLabels:
+  app.kubernetes.io/part-of: iot-stack
+  managed-by: argocd

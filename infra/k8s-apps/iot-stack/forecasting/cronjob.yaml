@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: forecast-job
+  namespace: iot-stack
+spec:
+  schedule: "*/30 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: forecast
+            image: your-registry/python-runner:latest
+            command: ["python", "/app/forecast.py"]
+            env:
+            - name: INFLUX_HOST
+              value: "influxdb.iot-stack.svc"
+            - name: INFLUX_PORT
+              value: "8086"
+            - name: INFLUX_DB
+              value: "telegraf"
+            volumeMounts:
+            - name: script-volume
+              mountPath: /app/forecast.py
+              subPath: forecast.py
+          restartPolicy: OnFailure
+          volumes:
+          - name: script-volume
+            configMap:
+              name: forecast-script

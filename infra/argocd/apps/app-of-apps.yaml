@@ -1,30 +1,22 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: iot-stack
+  name: app-of-apps
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    repoURL: git@github.com:dcasati/homelab.git 
+    repoURL: git@github.com:dcasati/homelab.git
     targetRevision: HEAD
-    path: infra/k8s-apps/mqtt-influx
-    directory:
-      recurse: true
+    path: infra/argocd/apps
   destination:
     server: https://kubernetes.default.svc
-    namespace: iot-stack
+    namespace: argocd
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
     - CreateNamespace=true
-    retry:
-      limit: 5
-      backoff:
-        duration: 5s
-        factor: 2
-        maxDuration: 3m0s
