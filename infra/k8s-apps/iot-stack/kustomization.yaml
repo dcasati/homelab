@@ -19,4 +19,4 @@ resources:
 
 images:
   - name: ghcr.io/dcasati/python-base
-    newTag: sha-9ba92c6
+    newTag: sha-644c3a4
