@@ -1,2 +1,3 @@
 infra/.terraform.lock.hcl
 .envrc
+microk8s.config

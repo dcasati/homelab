@@ -54,12 +54,14 @@ GitHub Actions automatically builds and pushes images when you:
    - Python scripts
    - requirements.txt
 
-Images are automatically tagged and pushed to `ghcr.io/dcasati/[service-name]`
+Images are automatically tagged with commit SHA: `ghcr.io/dcasati/[service-name]:sha-<commit>`
 
 ### Manual Build (Development/Testing)
 ```bash
 cd k8s-apps/iot-stack/forecasting
-./build.sh v1.0.0
+./build.sh  # Uses current git commit SHA
+# or
+./build.sh abc123  # Uses specific commit SHA
 
 # Note: Requires local Docker login to GHCR
 echo $GITHUB_TOKEN | docker login ghcr.io -u dcasati --password-stdin
@@ -74,25 +76,18 @@ The GitHub Actions workflow at `.github/workflows/build-images.yml` handles:
 
 ## Image Update Strategy
 
-### Option 1: Manual Updates
-1. Build new image with tag
+### ArgoCD Image Updater (Recommended)
+The iot-stack application is configured with ArgoCD Image Updater annotations:
+- Automatically detects new images with commit SHA tags
+- Updates Kubernetes manifests with new image tags
+- Commits changes back to the Git repository
+- ArgoCD syncs the updated manifests
+
+### Manual Updates
+1. Build new image with commit SHA tag
 2. Update the image tag in Kubernetes manifests
 3. Commit and push changes
 4. ArgoCD will automatically sync
-
-### Option 2: Image Updater (Recommended)
-Install ArgoCD Image Updater to automatically update image tags:
-```bash
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj-labs/argocd-image-updater/stable/manifests/install.yaml
-```
-
-Add annotations to your applications:
-```yaml
-metadata:
-  annotations:
-    argocd-image-updater.argoproj.io/image-list: forecasting=ghcr.io/dcasati/forecasting
-    argocd-image-updater.argoproj.io/write-back-method: git
-```
 
 ## Security Best Practices
 
@@ -107,12 +102,12 @@ metadata:
 ### Forecasting Service
 - **Location**: `k8s-apps/iot-stack/forecasting/`
 - **Base Image**: `python:3.11-slim`
-- **Registry**: `ghcr.io/dcasati/forecasting:latest`
+- **Registry**: `ghcr.io/dcasati/forecasting:sha-<commit>`
 
 ### Sunrise Service
 - **Location**: `k8s-apps/iot-stack/sunrise/`
 - **Base Image**: `python:3.11-slim`
-- **Registry**: `ghcr.io/dcasati/sunrise:latest`
+- **Registry**: `ghcr.io/dcasati/sunrise:sha-<commit>`
 
 ## Troubleshooting
 
@@ -124,14 +119,17 @@ metadata:
 ### Useful Commands
 ```bash
 # Test image locally (after GitHub Actions builds it)
-docker run --rm ghcr.io/dcasati/forecasting:latest
+docker run --rm ghcr.io/dcasati/forecasting:sha-abc123
 
 # Check pod logs
 kubectl logs -n iot-stack job/forecast-job-xxxxx
 
 # Check image details
-docker manifest inspect ghcr.io/dcasati/forecasting:latest
+docker manifest inspect ghcr.io/dcasati/forecasting:sha-abc123
 
 # Manual login (only needed for local development)
 echo $GITHUB_TOKEN | docker login ghcr.io -u dcasati --password-stdin
+
+# Get current commit SHA
+git rev-parse --short HEAD
 ```

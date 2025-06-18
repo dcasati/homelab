@@ -7,8 +7,8 @@ set -e
 
 SERVICE_NAME="sunrise"
 REGISTRY="${DOCKER_REGISTRY:-ghcr.io/dcasati}"  # Default to GitHub Container Registry
-TAG="${1:-latest}"
-IMAGE_NAME="${REGISTRY}/${SERVICE_NAME}:${TAG}"
+TAG="${1:-$(git rev-parse --short HEAD)}"  # Use commit SHA if no tag provided
+IMAGE_NAME="${REGISTRY}/${SERVICE_NAME}:sha-${TAG}"
 
 echo "Building ${SERVICE_NAME} Docker image..."
 echo "Image: ${IMAGE_NAME}"
