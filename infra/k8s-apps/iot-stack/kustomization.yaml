@@ -11,9 +11,8 @@ resources:
   - sunrise/configmap.yaml
   - sunrise/sunrise-cronjob.yaml
 
-commonLabels:
-  app.kubernetes.io/part-of: iot-stack
-  managed-by: argocd
+# Removed commonLabels to avoid immutable selector conflicts
+# Individual resources should have their own appropriate labels
 
 images:
   - name: ghcr.io/dcasati/python-base
