@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: rss-weather-alert
+  namespace: iot-stack
+spec:
+  schedule: "*/15 * * * *"     # every 15 minutes
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: alert-runner
+            image: ghcr.io/dcasati/sunrise:sha-97047d6
+            command: ["python", "/app/rss_weather_alert.py"]
+            env:
+            - name: FEED_URL
+              value: "https://weather.gc.ca/rss/battleboard/ab12_e.xml"
+            - name: ALERT_AREA
+              value: "ab12"
+            volumeMounts:
+            - name: script-volume
+              mountPath: /app/rss_weather_alert.py
+              subPath: rss_weather_alert.py
+          volumes:
+          - name: script-volume
+            configMap:
+              name: rss-weather-alert-script
+              defaultMode: 0o755   # make it executable

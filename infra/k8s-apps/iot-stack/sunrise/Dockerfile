@@ -1,10 +1,14 @@
-# base image: Python 3.11 slim
-FROM python:3.11-slim
+# Use homelab base image
+FROM ghcr.io/dcasati/homelab-base:latest
 
-RUN pip install astral pytz requests
-
-COPY sunrise_to_influx.py /app/sunrise_to_influx.py
+# Set working directory (already set in base image)
 WORKDIR /app
 
+# Copy application code (all dependencies already installed in base image)
+COPY sunrise_to_influx.py .
+
+# User is already set in base image (appuser)
+
+# Run the sunrise script
 CMD ["python", "sunrise_to_influx.py"]
 

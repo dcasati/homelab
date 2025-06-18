@@ -111,14 +111,20 @@ git push
 
 ## Example Services
 
+### Base Image
+- **Location**: `k8s-apps/base-images/`
+- **Base Image**: `python:3.11-slim`
+- **Registry**: `ghcr.io/dcasati/homelab-base:sha-<commit>`
+- **Purpose**: Common dependencies for all Python services
+
 ### Forecasting Service
 - **Location**: `k8s-apps/iot-stack/forecasting/`
-- **Base Image**: `python:3.11-slim`
+- **Base Image**: `ghcr.io/dcasati/homelab-base:latest`
 - **Registry**: `ghcr.io/dcasati/forecasting:sha-<commit>`
 
 ### Sunrise Service
 - **Location**: `k8s-apps/iot-stack/sunrise/`
-- **Base Image**: `python:3.11-slim`
+- **Base Image**: `ghcr.io/dcasati/homelab-base:latest`
 - **Registry**: `ghcr.io/dcasati/sunrise:sha-<commit>`
 
 ## Troubleshooting
