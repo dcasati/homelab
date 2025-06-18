@@ -15,7 +15,7 @@ spec:
             command: ["python", "/app/forecast.py"]
             env:
             - name: INFLUX_HOST
-              value: "influxdb.iot-stack.svc"
+              value: "influxdb-service.iot-stack.svc"
             - name: INFLUX_PORT
               value: "8086"
             - name: INFLUX_DB

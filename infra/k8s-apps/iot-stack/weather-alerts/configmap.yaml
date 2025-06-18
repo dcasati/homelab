@@ -32,7 +32,7 @@ data:
     link    = sanitize(link)
     summary = sanitize(summary)
 
-    influx_host     = os.getenv("INFLUX_HOST", "influxdb.iot-stack.svc")
+    influx_host     = os.getenv("INFLUX_HOST", "influxdb-service.iot-stack.svc")
     influx_port     = int(os.getenv("INFLUX_PORT", "8086"))
     influx_db       = os.getenv("INFLUX_DB", "telegraf")
     influx_user     = os.getenv("INFLUX_USER", "admin")
