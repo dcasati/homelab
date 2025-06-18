@@ -12,3 +12,9 @@ resources:
 commonLabels:
   app.kubernetes.io/part-of: iot-stack
   managed-by: argocd
+
+images:
+  - name: ghcr.io/dcasati/forecasting
+    newTag: sha-abc123
+  - name: ghcr.io/dcasati/sunrise
+    newTag: sha-abc123

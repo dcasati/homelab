@@ -11,7 +11,7 @@ spec:
         spec:
           containers:
           - name: forecast
-            image: ghcr.io/dcasati/forecasting:sha-abc123
+            image: ghcr.io/dcasati/forecasting
             env:
             - name: INFLUX_HOST
               value: "influxdb.iot-stack.svc"

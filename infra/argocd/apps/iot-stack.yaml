@@ -9,6 +9,9 @@ metadata:
       sunrise=ghcr.io/dcasati/sunrise
     argocd-image-updater.argoproj.io/write-back-method: git
     argocd-image-updater.argoproj.io/git-branch: main
+    argocd-image-updater.argoproj.io/kustomize-images: |
+      ghcr.io/dcasati/forecasting,
+      ghcr.io/dcasati/sunrise
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:

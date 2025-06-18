@@ -76,18 +76,30 @@ The GitHub Actions workflow at `.github/workflows/build-images.yml` handles:
 
 ## Image Update Strategy
 
-### ArgoCD Image Updater (Recommended)
-The iot-stack application is configured with ArgoCD Image Updater annotations:
-- Automatically detects new images with commit SHA tags
-- Updates Kubernetes manifests with new image tags
-- Commits changes back to the Git repository
-- ArgoCD syncs the updated manifests
+### CronJob Image Updates Challenge
+ArgoCD Image Updater has limited support for CronJobs. We solve this using Kustomize image replacements:
 
-### Manual Updates
-1. Build new image with commit SHA tag
-2. Update the image tag in Kubernetes manifests
-3. Commit and push changes
-4. ArgoCD will automatically sync
+1. **CronJob manifests** use base image names (no tags)
+2. **Kustomization.yaml** defines the specific image tags
+3. **ArgoCD Image Updater** can update Kustomize image configurations
+4. **Kustomize** applies the tags to all resources during deployment
+
+### Manual Updates (When needed)
+```bash
+# Update all images to a specific commit
+./update-images.sh abc123
+
+# Commit and push
+git add k8s-apps/iot-stack/kustomization.yaml
+git commit -m "Update images to sha-abc123"
+git push
+```
+
+### Automated Updates via ArgoCD Image Updater
+- Detects new images with commit SHA tags
+- Updates the kustomization.yaml file
+- Commits changes back to Git automatically
+- Works with CronJobs through Kustomize
 
 ## Security Best Practices
 
