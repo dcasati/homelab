@@ -81,7 +81,151 @@
           "color": {
             "mode": "continuous-BlPu"
           },
-          "mappings": [],
+          "mappings": [
+            {
+              "options": {
+                "from": 348.75,
+                "result": {
+                  "index": 0,
+                  "text": "N"
+                },
+                "to": 11.25
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 11.25,
+                "result": {
+                  "index": 1,
+                  "text": "NNE"
+                },
+                "to": 33.75
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 33.75,
+                "result": {
+                  "index": 2,
+                  "text": "NE"
+                },
+                "to": 56.25
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 56.25,
+                "result": {
+                  "index": 3,
+                  "text": "ENE"
+                },
+                "to": 78.75
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 78.75,
+                "result": {
+                  "index": 4,
+                  "text": "E"
+                },
+                "to": 101.25
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 101.25,
+                "result": {
+                  "index": 5,
+                  "text": "ESE"
+                },
+                "to": 123.75
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 123.75,
+                "result": {
+                  "index": 6,
+                  "text": "SE"
+                },
+                "to": 146.25
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 146.25,
+                "result": {
+                  "index": 7,
+                  "text": "SSE"
+                },
+                "to": 168.75
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 168.75,
+                "result": {
+                  "index": 8,
+                  "text": "S"
+                },
+                "to": 191.25
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 191.25,
+                "result": {
+                  "index": 9,
+                  "text": "SSW"
+                },
+                "to": 213.75
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 213.75,
+                "result": {
+                  "index": 10,
+                  "text": "SW"
+                },
+                "to": 236.25
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 236.25,
+                "result": {
+                  "index": 11,
+                  "text": "WSW"
+                },
+                "to": 258.75
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 258.75,
+                "result": {
+                  "index": 12,
+                  "text": "W"
+                },
+                "to": 281.25
+              },
+              "type": "range"
+            }
+          ],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -636,7 +780,7 @@
             "barAlignment": 0,
             "drawStyle": "line",
             "fillOpacity": 25,
-            "gradientMode": "none",
+            "gradientMode": "hue",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
@@ -649,7 +793,7 @@
               "type": "linear"
             },
             "showPoints": "auto",
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -722,7 +866,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "continuous-BlYlRd"
           },
           "custom": {
             "axisCenteredZero": false,
@@ -732,7 +876,7 @@
             "barAlignment": 0,
             "drawStyle": "line",
             "fillOpacity": 25,
-            "gradientMode": "none",
+            "gradientMode": "opacity",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
@@ -745,7 +889,7 @@
               "type": "linear"
             },
             "showPoints": "auto",
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -819,7 +963,7 @@
         "defaults": {
           "color": {
             "fixedColor": "light-blue",
-            "mode": "fixed"
+            "mode": "palette-classic"
           },
           "custom": {
             "axisCenteredZero": false,
@@ -829,7 +973,7 @@
             "barAlignment": 0,
             "drawStyle": "line",
             "fillOpacity": 25,
-            "gradientMode": "none",
+            "gradientMode": "opacity",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
@@ -842,7 +986,7 @@
               "type": "linear"
             },
             "showPoints": "auto",
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -906,6 +1050,103 @@
       ],
       "title": "Humidity",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "light-orange",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 25,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "pressurembar"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 13
+      },
+      "id": 14,
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "9.3.8",
+      "targets": [
+        {
+          "alias": "$tag_device",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB}"
+          },
+          "query": "SELECT mean(\"pressure\") \nFROM \"mqtt_consumer\" \nWHERE $timeFilter \nGROUP BY time($__interval), \"device\" fill(null)\n",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Pressure",
+      "type": "timeseries"
     }
   ],
   "schemaVersion": 37,
@@ -922,6 +1163,6 @@
   "timezone": "",
   "title": "Weather Station",
   "uid": "cy7yjiENk",
-  "version": 15,
+  "version": 18,
   "weekStart": ""
 }
