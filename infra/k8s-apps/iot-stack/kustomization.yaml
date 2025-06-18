@@ -17,4 +17,4 @@ commonLabels:
 
 images:
   - name: ghcr.io/dcasati/python-base
-    newTag: sha-97047d6
+    newTag: sha-9ba92c6
