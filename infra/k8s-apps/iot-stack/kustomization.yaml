@@ -15,6 +15,6 @@ commonLabels:
 
 images:
   - name: ghcr.io/dcasati/forecasting
-    newTag: latest
+    newTag: sha-97047d6
   - name: ghcr.io/dcasati/sunrise
-    newTag: latest
+    newTag: sha-97047d6
