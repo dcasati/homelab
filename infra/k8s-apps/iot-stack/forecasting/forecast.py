@@ -4,7 +4,7 @@ import pandas as pd
 from influxdb import InfluxDBClient as InfluxQLClient
 
 # ---- CONFIG ----
-INFLUX_HOST = os.getenv("INFLUX_HOST", "influxdb.iot-stack.svc")
+INFLUX_HOST = os.getenv("INFLUX_HOST", "influxdb-service.iot-stack.svc")
 INFLUX_PORT = int(os.getenv("INFLUX_PORT", "8086"))
 INFLUX_DB = os.getenv("INFLUX_DB", "iot")
 DEVICE_NAME = "Acurite-5n1"
@@ -43,7 +43,7 @@ df.set_index("time", inplace=True)
 forecast = "Clear conditions"
 
 if len(df) > 2:
-    temp_delta = df["temperature_C"].iloc[-1] - df["temperature_C"].iloc[0]
+    temp_delta = df["temperature_F"].iloc[-1] - df["temperature_F"].iloc[0]
     hum_delta = df["humidity"].iloc[-1] - df["humidity"].iloc[0]
     press_delta = df["pressure"].iloc[-1] - df["pressure"].iloc[0]
 
