@@ -1,0 +1,44 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: vesync-cronjob
+  namespace: iot-stack
+spec:
+  # Run every 5 minutes
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: vesync
+            image: ghcr.io/dcasati/python-base
+            command: ["python", "/app/vesync.py"]
+            env:
+            - name: VESYNC_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: vesync-credentials
+                  key: email
+            - name: VESYNC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: vesync-credentials
+                  key: password
+            - name: INFLUXDB_HOST
+              value: "influxdb-service.iot-stack.svc.cluster.local"
+            - name: INFLUXDB_PORT
+              value: "8086"
+            - name: INFLUXDB_DATABASE
+              value: "homelab"
+            volumeMounts:
+            - name: vesync-script
+              mountPath: /app
+              readOnly: true
+          volumes:
+          - name: vesync-script
+            configMap:
+              name: vesync-script
+          restartPolicy: OnFailure
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1

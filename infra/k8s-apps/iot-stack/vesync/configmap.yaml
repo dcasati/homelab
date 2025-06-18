@@ -1,0 +1,155 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vesync-script
+  namespace: iot-stack
+data:
+  vesync.py: |
+    from pyvesync import VeSync
+    import os
+    from influxdb import InfluxDBClient
+    from datetime import datetime, timezone
+    import json
+
+    # Environment variables
+    EMAIL = os.getenv("VESYNC_EMAIL")
+    PASSWORD = os.getenv("VESYNC_PASSWORD")
+    INFLUXDB_HOST = os.getenv("INFLUXDB_HOST", "influxdb-service.iot-stack.svc.cluster.local")
+    INFLUXDB_PORT = int(os.getenv("INFLUXDB_PORT", "8086"))
+    INFLUXDB_DATABASE = os.getenv("INFLUXDB_DATABASE", "homelab")
+
+    def main():
+        # Initialize VeSync
+        manager = VeSync(EMAIL, PASSWORD)
+        manager.login()
+        manager.update()
+
+        # Initialize InfluxDB client
+        client = InfluxDBClient(host=INFLUXDB_HOST, port=INFLUXDB_PORT, database=INFLUXDB_DATABASE)
+        
+        # Ensure database exists
+        client.create_database(INFLUXDB_DATABASE)
+
+        points = []
+
+        # Process VeSync fans (air purifiers) - using manager.fans directly since manager.devices is None
+        fans = getattr(manager, 'fans', [])
+        for device in fans:
+            try:
+                device.update()
+                print(f"Processing VeSync fan/air purifier: {device.device_name}")
+                
+                point = {
+                    "measurement": "vesync_airpurifier",
+                    "tags": {
+                        "device_name": device.device_name.strip(),
+                        "device_type": "airpurifier",
+                        "device_class": getattr(device, 'type', 'unknown'),
+                        "cid": getattr(device, 'cid', 'unknown')
+                    },
+                    "fields": {
+                        "is_on": device.device_status == "on",
+                        "air_quality": getattr(device, 'air_quality', None),
+                        "mode": getattr(device, 'mode', None),
+                        "fan_level": getattr(device, 'fan_level', None),
+                        "speed": getattr(device, 'speed', None),
+                        "filter_life": getattr(device, 'filter_life', None),
+                        "screen_status": getattr(device, 'screen_status', None),
+                        "night_light": getattr(device, 'night_light', None),
+                        "child_lock": getattr(device, 'child_lock', None),
+                        "light_detection_state": getattr(device, 'light_detection_state', None)
+                    }
+                }
+                
+                # Remove None values and convert any non-numeric strings to proper types
+                cleaned_fields = {}
+                for k, v in point["fields"].items():
+                    if v is not None:
+                        # Convert string numbers to actual numbers
+                        if isinstance(v, str) and v.isdigit():
+                            cleaned_fields[k] = int(v)
+                        elif isinstance(v, str):
+                            try:
+                                cleaned_fields[k] = float(v)
+                            except ValueError:
+                                cleaned_fields[k] = v
+                        else:
+                            cleaned_fields[k] = v
+                
+                point["fields"] = cleaned_fields
+                
+                if point["fields"]:  # Only add if we have data
+                    points.append(point)
+                    print(f"  Added data point for {device.device_name}: {list(point['fields'].keys())}")
+                    
+            except Exception as e:
+                print(f"  Error processing device {getattr(device, 'device_name', 'unknown')}: {e}")
+
+        # Process outlets (if any)
+        outlets = getattr(manager, 'outlets', [])
+        for device in outlets:
+            try:
+                device.update()
+                print(f"Processing VeSync outlet: {device.device_name}")
+                
+                point = {
+                    "measurement": "vesync_outlet",
+                    "tags": {
+                        "device_name": device.device_name.strip(),
+                        "device_type": "outlet"
+                    },
+                    "fields": {
+                        "is_on": device.device_status == "on",
+                        "power": getattr(device, 'power', None),
+                        "voltage": getattr(device, 'voltage', None),
+                        "energy_today": getattr(device, 'energy_today', None)
+                    }
+                }
+                
+                # Remove None values
+                point["fields"] = {k: v for k, v in point["fields"].items() if v is not None}
+                if point["fields"]:
+                    points.append(point)
+                    
+            except Exception as e:
+                print(f"  Error processing outlet {getattr(device, 'device_name', 'unknown')}: {e}")
+
+        # Process bulbs (if any)
+        bulbs = getattr(manager, 'bulbs', [])
+        for device in bulbs:
+            try:
+                device.update()
+                print(f"Processing VeSync bulb: {device.device_name}")
+                
+                point = {
+                    "measurement": "vesync_bulb",
+                    "tags": {
+                        "device_name": device.device_name.strip(),
+                        "device_type": "bulb"
+                    },
+                    "fields": {
+                        "is_on": device.device_status == "on",
+                        "brightness": getattr(device, 'brightness', None),
+                        "color_temp": getattr(device, 'color_temp', None)
+                    }
+                }
+                
+                # Remove None values
+                point["fields"] = {k: v for k, v in point["fields"].items() if v is not None}
+                if point["fields"]:
+                    points.append(point)
+                    
+            except Exception as e:
+                print(f"  Error processing bulb {getattr(device, 'device_name', 'unknown')}: {e}")
+
+        # Write all points to InfluxDB
+        if points:
+            client.write_points(points)
+            print(f"Successfully wrote {len(points)} data points to InfluxDB")
+        else:
+            print("No data points to write")
+
+        print("VeSync data collection completed")
+
+    if __name__ == "__main__":
+        main()
