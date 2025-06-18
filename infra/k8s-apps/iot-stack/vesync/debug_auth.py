@@ -10,8 +10,8 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 
 # You'll need to set these environment variables
-EMAIL = os.getenv("VESYNC_EMAIL", "767services@gmail.com")
-PASSWORD = os.getenv("VESYNC_PASSWORD", "your-actual-password")
+EMAIL = os.getenv("VESYNC_EMAIL", "your-email@example.com")
+PASSWORD = os.getenv("VESYNC_PASSWORD", "your-password")
 
 def debug_vesync_auth():
     """Debug VeSync authentication issues"""
