@@ -4,12 +4,12 @@ on:
   push:
     branches: [ main, develop ]
     paths:
-      - 'k8s-apps/base-images/**'
+      - 'infra/k8s-apps/base-images/**'
       - '.github/workflows/build-images.yml'
   pull_request:
     branches: [ main ]
     paths:
-      - 'k8s-apps/base-images/**'
+      - 'infra/k8s-apps/base-images/**'
       - '.github/workflows/build-images.yml'
 
 env:
@@ -50,7 +50,7 @@ jobs:
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
       with:
-        context: ./k8s-apps/base-images
+        context: ./infra/k8s-apps/base-images
         platforms: linux/amd64,linux/arm64
         push: true
         tags: ${{ steps.meta.outputs.tags }}
@@ -66,5 +66,5 @@ jobs:
         echo "Primary tag (for deployment): ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }}"
         echo ""
         echo "To update manifests, run:"
-        echo "  ./update-base-image.sh ${{ github.sha }}"
-        echo "  ./update-images.sh ${{ github.sha }}"
+        echo "  ./infra/update-base-image.sh ${{ github.sha }}"
+        echo "  ./infra/update-images.sh ${{ github.sha }}"
