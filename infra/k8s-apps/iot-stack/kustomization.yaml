@@ -12,7 +12,6 @@ resources:
   - sunrise/sunrise-cronjob.yaml
   - vesync/configmap.yaml
   - vesync/cronjob.yaml
-  - vesync/secret.yaml
 
 # Removed commonLabels to avoid immutable selector conflicts
 # Individual resources should have their own appropriate labels
