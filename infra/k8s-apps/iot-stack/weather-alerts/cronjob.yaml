@@ -13,7 +13,7 @@ spec:
           restartPolicy: OnFailure
           containers:
           - name: alert-runner
-            image: ghcr.io/dcasati/sunrise:sha-97047d6
+            image: ghcr.io/dcasati/python-base:sha-9f5b39a
             command: ["python", "/app/rss_weather_alert.py"]
             env:
             - name: FEED_URL
