@@ -1,0 +1,58 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sunrise-script
+  namespace: iot-stack
+data:
+  sunrise_to_influx.py: |
+    import requests
+    from astral import LocationInfo
+    from astral.sun import sun
+    from datetime import datetime
+    import pytz
+    import os
+
+    LAT = float(os.getenv("LAT", "51.0447"))
+    LON = float(os.getenv("LON", "-114.0719"))
+    TZ  = os.getenv("TZ", "America/Edmonton")
+    INFLUX_HOST = os.getenv("INFLUX_HOST", "http://influxdb-service.iot-stack:8086")
+    INFLUX_DB   = os.getenv("INFLUX_DB", "iot")
+
+    city = LocationInfo("OfflineSun", "Earth", TZ, LAT, LON)
+    s = sun(city.observer, date=datetime.now(), tzinfo=pytz.timezone(TZ))
+
+    sunrise_ts = int(s['sunrise'].timestamp() * 1e9)
+    sunset_ts  = int(s['sunset'].timestamp()  * 1e9)
+
+    # Calculate daylight duration
+    daylight = s['sunset'] - s['sunrise']
+    daylight_hours = daylight.total_seconds() / 3600
+    hours = int(daylight_hours)
+    minutes = int((daylight_hours - hours) * 60)
+    readable = f"{hours}h{minutes}m"
+
+    # Current time for daylight metric
+    now_ts = int(datetime.now().timestamp() * 1e9)
+
+    payload = f"""
+    sunrise,city=Calgary value={sunrise_ts} {now_ts}
+    sunset,city=Calgary value={sunset_ts} {now_ts}
+    daylight,city=Calgary value={daylight_hours},readable="{readable}" {now_ts}
+    """
+
+    try:
+        url = f"{INFLUX_HOST}/write"
+        params = {"db": INFLUX_DB}
+        headers = {"Content-Type": "application/octet-stream"}
+        
+        response = requests.post(url, params=params, headers=headers, data=payload.strip())
+        response.raise_for_status()
+        
+        print(f"Successfully wrote sunrise/sunset data to InfluxDB")
+        print(f"Sunrise: {s['sunrise']}")
+        print(f"Sunset: {s['sunset']}")
+        print(f"Daylight: {readable}")
+        
+    except Exception as e:
+        print(f"Error writing to InfluxDB: {e}")
+        exit(1)

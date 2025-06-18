@@ -6,7 +6,9 @@ resources:
   - influxdb/deployment.yaml
   - mosquitto/deployment.yaml
   - telegraf/deployment.yaml
+  - forecasting/configmap.yaml
   - forecasting/cronjob.yaml
+  - sunrise/configmap.yaml
   - sunrise/sunrise-cronjob.yaml
 
 commonLabels:
@@ -14,7 +16,5 @@ commonLabels:
   managed-by: argocd
 
 images:
-  - name: ghcr.io/dcasati/forecasting
-    newTag: sha-97047d6
-  - name: ghcr.io/dcasati/sunrise
+  - name: ghcr.io/dcasati/python-base
     newTag: sha-97047d6

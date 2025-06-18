@@ -46,19 +46,20 @@ localhost:32000/homelab/service-name:tag
 ## Build Process
 
 ### Automated Build (Recommended)
-GitHub Actions automatically builds and pushes images when you:
-1. Push changes to `main` branch
-2. Create pull requests
-3. Modify any Docker-related files:
-   - Dockerfiles
-   - Python scripts
-   - requirements.txt
+GitHub Actions automatically builds and pushes the Python base image when you:
+1. Push changes to `main` or `develop` branch
+2. Create pull requests  
+3. Modify base image files:
+   - `k8s-apps/base-images/Dockerfile`
+   - `k8s-apps/base-images/requirements.txt`
+   - `.github/workflows/build-images.yml`
 
-Images are automatically tagged with commit SHA: `ghcr.io/dcasati/[service-name]:sha-<commit>`
+The base image is tagged with commit SHA: `ghcr.io/dcasati/python-base:sha-<commit>`
 
 ### Manual Build (Development/Testing)
 ```bash
-cd k8s-apps/iot-stack/forecasting
+# Build base image
+cd k8s-apps/base-images
 ./build.sh  # Uses current git commit SHA
 # or
 ./build.sh abc123  # Uses specific commit SHA
@@ -69,10 +70,11 @@ echo $GITHUB_TOKEN | docker login ghcr.io -u dcasati --password-stdin
 
 ### CI/CD Pipeline (Current Implementation)
 The GitHub Actions workflow at `.github/workflows/build-images.yml` handles:
-- Change detection (only builds modified services)
+- Building only the Python base image when base-images/ changes
 - Automatic login to GHCR using `GITHUB_TOKEN`
-- Multi-tag strategy (latest, branch, SHA)
-- Parallel builds for multiple services
+- SHA-based tagging strategy (no latest tags)
+- Multi-platform builds (linux/amd64, linux/arm64)
+- Efficient caching for faster builds
 
 ## Image Update Strategy
 
@@ -119,13 +121,15 @@ git push
 
 ### Forecasting Service
 - **Location**: `k8s-apps/iot-stack/forecasting/`
-- **Base Image**: `ghcr.io/dcasati/python-base:sha-<commit>`
-- **Registry**: `ghcr.io/dcasati/forecasting:sha-<commit>`
+- **Uses Base Image**: `ghcr.io/dcasati/python-base:sha-<commit>`
+- **Code Delivery**: ConfigMap (no individual image built)
+- **Deployment**: CronJob using base image + mounted script
 
 ### Sunrise Service
 - **Location**: `k8s-apps/iot-stack/sunrise/`
-- **Base Image**: `ghcr.io/dcasati/python-base:sha-<commit>`
-- **Registry**: `ghcr.io/dcasati/sunrise:sha-<commit>`
+- **Uses Base Image**: `ghcr.io/dcasati/python-base:sha-<commit>`
+- **Code Delivery**: ConfigMap (no individual image built)
+- **Deployment**: CronJob using base image + mounted script
 
 ## Troubleshooting
 
@@ -136,14 +140,14 @@ git push
 
 ### Useful Commands
 ```bash
-# Test image locally (after GitHub Actions builds it)
-docker run --rm ghcr.io/dcasati/forecasting:sha-abc123
+# Test base image locally (after GitHub Actions builds it)
+docker run --rm ghcr.io/dcasati/python-base:sha-abc123
 
 # Check pod logs
 kubectl logs -n iot-stack job/forecast-job-xxxxx
 
-# Check image details
-docker manifest inspect ghcr.io/dcasati/forecasting:sha-abc123
+# Check base image details
+docker manifest inspect ghcr.io/dcasati/python-base:sha-abc123
 
 # Manual login (only needed for local development)
 echo $GITHUB_TOKEN | docker login ghcr.io -u dcasati --password-stdin

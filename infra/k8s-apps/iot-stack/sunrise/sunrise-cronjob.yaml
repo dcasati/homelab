@@ -11,7 +11,8 @@ spec:
         spec:
           containers:
           - name: sun-writer
-            image: ghcr.io/dcasati/sunrise
+            image: ghcr.io/dcasati/python-base
+            command: ["python", "/app/sunrise_to_influx.py"]
             env:
             - name: LAT
               value: "51.0447"
@@ -23,5 +24,13 @@ spec:
               value: "http://influxdb-service.iot-stack:8086"
             - name: INFLUX_DB
               value: "iot"
+            volumeMounts:
+            - name: script-volume
+              mountPath: /app/sunrise_to_influx.py
+              subPath: sunrise_to_influx.py
           restartPolicy: OnFailure
+          volumes:
+          - name: script-volume
+            configMap:
+              name: sunrise-script
 

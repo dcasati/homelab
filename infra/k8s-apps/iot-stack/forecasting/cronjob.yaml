@@ -11,7 +11,8 @@ spec:
         spec:
           containers:
           - name: forecast
-            image: ghcr.io/dcasati/forecasting
+            image: ghcr.io/dcasati/python-base
+            command: ["python", "/app/forecast.py"]
             env:
             - name: INFLUX_HOST
               value: "influxdb.iot-stack.svc"
@@ -19,4 +20,12 @@ spec:
               value: "8086"
             - name: INFLUX_DB
               value: "iot"
+            volumeMounts:
+            - name: script-volume
+              mountPath: /app/forecast.py
+              subPath: forecast.py
           restartPolicy: OnFailure
+          volumes:
+          - name: script-volume
+            configMap:
+              name: forecast-script

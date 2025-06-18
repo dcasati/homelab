@@ -74,6 +74,28 @@ All applications are configured for automatic sync with pruning and self-healing
 
 ## Development
 
+### Image Build Process
+
+This repository uses a single Python base image strategy:
+
+1. **Base Image Only**: Only `ghcr.io/dcasati/python-base:sha-<commit>` is built via GitHub Actions
+2. **Service Code**: Delivered via ConfigMaps (no individual service images)
+3. **CronJobs**: Use the base image and mount Python scripts from ConfigMaps
+
+#### Building Images
+```bash
+# Automatic: GitHub Actions builds base image on push to main/develop
+# Manual: Build base image locally
+cd k8s-apps/base-images
+./build.sh
+
+# Update manifests with new base image SHA
+./update-base-image.sh <commit-sha>
+./update-images.sh <commit-sha>
+```
+
+### Adding a New Application
+
 To add a new application:
 
 1. Create the Kubernetes manifests in `k8s-apps/new-app/`

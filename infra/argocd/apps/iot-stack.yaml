@@ -5,13 +5,11 @@ metadata:
   namespace: argocd
   annotations:
     argocd-image-updater.argoproj.io/image-list: |
-      forecasting=ghcr.io/dcasati/forecasting,
-      sunrise=ghcr.io/dcasati/sunrise
+      python-base=ghcr.io/dcasati/python-base
     argocd-image-updater.argoproj.io/write-back-method: git
     argocd-image-updater.argoproj.io/git-branch: main
     argocd-image-updater.argoproj.io/kustomize-images: |
-      ghcr.io/dcasati/forecasting,
-      ghcr.io/dcasati/sunrise
+      ghcr.io/dcasati/python-base
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:

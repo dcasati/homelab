@@ -1,26 +1,31 @@
 #!/bin/bash
 
-# Build script for sunrise service
-# Usage: ./build.sh [tag]
+# DEPRECATED: This build script is no longer used
+# 
+# The sunrise service now uses the shared Python base image
+# and delivers code via ConfigMaps instead of building individual images.
+#
+# To update the base image:
+#   cd ../../../k8s-apps/base-images
+#   ./build.sh
+#
+# To update the sunrise code:
+#   Edit configmap.yaml and push to git
+#   ArgoCD will sync automatically
 
-set -e
-
-SERVICE_NAME="sunrise"
-REGISTRY="${DOCKER_REGISTRY:-ghcr.io/dcasati}"  # Default to GitHub Container Registry
-TAG="${1:-$(git rev-parse --short HEAD)}"  # Use commit SHA if no tag provided
-IMAGE_NAME="${REGISTRY}/${SERVICE_NAME}:sha-${TAG}"
-
-echo "Building ${SERVICE_NAME} Docker image..."
-echo "Image: ${IMAGE_NAME}"
-
-# Build the image
-docker build -t "${IMAGE_NAME}" .
-
-# Push to registry
-echo "Pushing to registry..."
-docker push "${IMAGE_NAME}"
-
-echo "Successfully built and pushed ${IMAGE_NAME}"
+echo "ERROR: This build script is deprecated"
 echo ""
-echo "To use in Kubernetes:"
-echo "  image: ${IMAGE_NAME}"
+echo "The sunrise service now uses:"
+echo "  - Shared base image: ghcr.io/dcasati/python-base:sha-<commit>"
+echo "  - Code delivery: ConfigMap (sunrise_to_influx.py)"
+echo "  - No individual image build required"
+echo ""
+echo "To update:"
+echo "  1. Edit k8s-apps/iot-stack/sunrise/configmap.yaml"
+echo "  2. git add, commit, and push"
+echo "  3. ArgoCD will sync automatically"
+echo ""
+echo "To update base image:"
+echo "  cd ../../../k8s-apps/base-images && ./build.sh"
+
+exit 1
