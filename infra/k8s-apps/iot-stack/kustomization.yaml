@@ -6,7 +6,6 @@ resources:
   - influxdb/deployment.yaml
   - mosquitto/deployment.yaml
   - telegraf/deployment.yaml
-  - forecasting/configmap.yaml
   - forecasting/cronjob.yaml
   - sunrise/sunrise-cronjob.yaml
 

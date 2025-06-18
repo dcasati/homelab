@@ -11,21 +11,12 @@ spec:
         spec:
           containers:
           - name: forecast
-            image: your-registry/python-runner:latest
-            command: ["python", "/app/forecast.py"]
+            image: ghcr.io/dcasati/forecasting:latest
             env:
             - name: INFLUX_HOST
               value: "influxdb.iot-stack.svc"
             - name: INFLUX_PORT
               value: "8086"
             - name: INFLUX_DB
-              value: "telegraf"
-            volumeMounts:
-            - name: script-volume
-              mountPath: /app/forecast.py
-              subPath: forecast.py
+              value: "iot"
           restartPolicy: OnFailure
-          volumes:
-          - name: script-volume
-            configMap:
-              name: forecast-script

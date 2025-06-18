@@ -11,7 +11,7 @@ spec:
         spec:
           containers:
           - name: sun-writer
-            image: your-registry/sunrise-influx:latest
+            image: ghcr.io/dcasati/sunrise:latest
             env:
             - name: LAT
               value: "51.0447"
