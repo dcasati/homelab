@@ -4,7 +4,7 @@ metadata:
   name: rss-weather-alert
   namespace: iot-stack
 spec:
-  schedule: "*/15 * * * *"     # every 15 minutes
+  schedule: "*/15 * * * *"
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
@@ -13,13 +13,23 @@ spec:
           restartPolicy: OnFailure
           containers:
           - name: alert-runner
-            image: ghcr.io/dcasati/python-base:sha-9f5b39a
+            image: ghcr.io/dcasati/python-base:sha-11fec35
             command: ["python", "/app/rss_weather_alert.py"]
             env:
             - name: FEED_URL
               value: "https://weather.gc.ca/rss/battleboard/ab12_e.xml"
             - name: ALERT_AREA
               value: "ab12"
+            - name: INFLUX_HOST
+              value: "influxdb-service.iot-stack.svc"
+            - name: INFLUX_PORT
+              value: "8086"
+            - name: INFLUX_DB
+              value: "iot"
+            - name: INFLUX_USER
+              value: "admin"
+            - name: INFLUX_PASSWORD
+              value: "admin123"
             volumeMounts:
             - name: script-volume
               mountPath: /app/rss_weather_alert.py
@@ -28,4 +38,4 @@ spec:
           - name: script-volume
             configMap:
               name: rss-weather-alert-script
-              defaultMode: 0o755   # make it executable
+              defaultMode: 0o755

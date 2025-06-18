@@ -7,8 +7,8 @@ data:
   rss_weather_alert.py: |
     #!/usr/bin/env python3
     import feedparser, re, os, sys
+    from influxdb import InfluxDBClient
 
-    # get feed URL (env or CLI)
     FEED_URL = os.getenv("FEED_URL") or (sys.argv[1] if len(sys.argv) > 1 else None)
     AREA     = os.getenv("ALERT_AREA", "unknown")
 
@@ -32,5 +32,32 @@ data:
     link    = sanitize(link)
     summary = sanitize(summary)
 
-    # emit Influx line protocol
-    print(f'rss_weather_alert,area={AREA} title="{title}",link="{link}",summary="{summary}"')
+    influx_host     = os.getenv("INFLUX_HOST", "influxdb.iot-stack.svc")
+    influx_port     = int(os.getenv("INFLUX_PORT", "8086"))
+    influx_db       = os.getenv("INFLUX_DB", "telegraf")
+    influx_user     = os.getenv("INFLUX_USER", "admin")
+    influx_password = os.getenv("INFLUX_PASSWORD", "admin123")
+
+    client = InfluxDBClient(
+        host=influx_host,
+        port=influx_port,
+        username=influx_user,
+        password=influx_password,
+        database=influx_db
+    )
+
+    json_body = [{
+        "measurement": "rss_weather_alert",
+        "tags": {
+            "area": AREA
+        },
+        "fields": {
+            "title": title,
+            "link": link,
+            "summary": summary
+        }
+    }]
+
+    client.write_points(json_body)
+    client.close()
+    print(f"Alert for {AREA}: {title} - {link}")

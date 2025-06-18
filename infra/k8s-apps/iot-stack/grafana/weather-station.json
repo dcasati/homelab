@@ -37,6 +37,12 @@
     },
     {
       "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    },
+    {
+      "type": "panel",
       "id": "timeseries",
       "name": "Time series",
       "version": ""
@@ -81,6 +87,133 @@
           "color": {
             "mode": "thresholds"
           },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 202
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Link"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "targetBlank": true,
+                    "title": "View full alert",
+                    "url": "${__value.raw}\r"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 23,
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "9.3.8",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB}"
+          },
+          "query": "SELECT * FROM rss_weather_alert\nWHERE area = 'ab12'\nORDER BY time DESC\nLIMIT 1\n",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Weather Alerts",
+      "transformations": [
+        {
+          "id": "joinByField",
+          "options": {
+            "byField": "Time",
+            "mode": "outer"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "rss_weather_alert.area": true
+            },
+            "indexByName": {
+              "Time": 0,
+              "rss_weather_alert.area": 1,
+              "rss_weather_alert.link": 4,
+              "rss_weather_alert.summary": 3,
+              "rss_weather_alert.title": 2
+            },
+            "renameByName": {
+              "rss_weather_alert.link": "Link",
+              "rss_weather_alert.summary": "Summary",
+              "rss_weather_alert.title": "Alert"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -103,7 +236,7 @@
         "h": 2,
         "w": 3,
         "x": 0,
-        "y": 0
+        "y": 3
       },
       "id": 16,
       "options": {
@@ -313,7 +446,7 @@
         "h": 4,
         "w": 3,
         "x": 3,
-        "y": 0
+        "y": 3
       },
       "id": 15,
       "options": {
@@ -379,7 +512,7 @@
         "h": 4,
         "w": 3,
         "x": 6,
-        "y": 0
+        "y": 3
       },
       "id": 3,
       "options": {
@@ -445,7 +578,7 @@
         "h": 4,
         "w": 3,
         "x": 9,
-        "y": 0
+        "y": 3
       },
       "id": 10,
       "options": {
@@ -511,7 +644,7 @@
         "h": 4,
         "w": 4,
         "x": 12,
-        "y": 0
+        "y": 3
       },
       "id": 2,
       "options": {
@@ -576,7 +709,7 @@
         "h": 2,
         "w": 4,
         "x": 16,
-        "y": 0
+        "y": 3
       },
       "id": 8,
       "options": {
@@ -668,7 +801,7 @@
         "h": 4,
         "w": 4,
         "x": 20,
-        "y": 0
+        "y": 3
       },
       "id": 9,
       "options": {
@@ -731,7 +864,7 @@
         "h": 2,
         "w": 3,
         "x": 0,
-        "y": 2
+        "y": 5
       },
       "id": 17,
       "options": {
@@ -794,7 +927,7 @@
         "h": 2,
         "w": 2,
         "x": 16,
-        "y": 2
+        "y": 5
       },
       "id": 11,
       "options": {
@@ -860,7 +993,7 @@
         "h": 2,
         "w": 2,
         "x": 18,
-        "y": 2
+        "y": 5
       },
       "id": 7,
       "options": {
@@ -957,7 +1090,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 4
+        "y": 7
       },
       "id": 6,
       "options": {
@@ -1053,7 +1186,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 4
+        "y": 7
       },
       "id": 5,
       "options": {
@@ -1150,7 +1283,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 13
+        "y": 16
       },
       "id": 13,
       "options": {
@@ -1247,7 +1380,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 13
+        "y": 16
       },
       "id": 14,
       "options": {
@@ -1282,7 +1415,7 @@
       "type": "timeseries"
     }
   ],
-  "refresh": false,
+  "refresh": "10s",
   "schemaVersion": 37,
   "style": "dark",
   "tags": [],
@@ -1290,13 +1423,13 @@
     "list": []
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Weather Station",
   "uid": "cy7yjiENk",
-  "version": 32,
+  "version": 36,
   "weekStart": ""
 }
