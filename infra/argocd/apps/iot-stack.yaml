@@ -28,10 +28,29 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
-    - CreateNamespace=true
+      - CreateNamespace=true
     retry:
       limit: 5
       backoff:
         duration: 5s
         factor: 2
         maxDuration: 3m0s
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      name: influxdb
+      namespace: iot-stack
+      jsonPointers:
+        - /spec/selector
+    - group: apps
+      kind: Deployment
+      name: telegraf
+      namespace: iot-stack
+      jsonPointers:
+        - /spec/selector
+    - group: apps
+      kind: Deployment
+      name: mosquitto
+      namespace: iot-stack
+      jsonPointers:
+        - /spec/selector
