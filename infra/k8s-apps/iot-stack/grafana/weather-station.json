@@ -78,6 +78,19 @@
   "liveNow": false,
   "panels": [
     {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 27,
+      "panels": [],
+      "title": "Weather Station",
+      "type": "row"
+    },
+    {
       "datasource": {
         "type": "influxdb",
         "uid": "${DS_INFLUXDB}"
@@ -144,7 +157,7 @@
         "h": 3,
         "w": 24,
         "x": 0,
-        "y": 0
+        "y": 1
       },
       "id": 23,
       "options": {
@@ -236,7 +249,7 @@
         "h": 2,
         "w": 3,
         "x": 0,
-        "y": 3
+        "y": 4
       },
       "id": 16,
       "options": {
@@ -423,6 +436,39 @@
                 "to": 281.25
               },
               "type": "range"
+            },
+            {
+              "options": {
+                "from": 281.25,
+                "result": {
+                  "index": 13,
+                  "text": "WNW"
+                },
+                "to": 303.75
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 303.75,
+                "result": {
+                  "index": 14,
+                  "text": "NW"
+                },
+                "to": 326.25
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 326.25,
+                "result": {
+                  "index": 15,
+                  "text": "NNW"
+                },
+                "to": 348.75
+              },
+              "type": "range"
             }
           ],
           "thresholds": {
@@ -446,7 +492,7 @@
         "h": 4,
         "w": 3,
         "x": 3,
-        "y": 3
+        "y": 4
       },
       "id": 15,
       "options": {
@@ -512,7 +558,7 @@
         "h": 4,
         "w": 3,
         "x": 6,
-        "y": 3
+        "y": 4
       },
       "id": 3,
       "options": {
@@ -578,7 +624,7 @@
         "h": 4,
         "w": 3,
         "x": 9,
-        "y": 3
+        "y": 4
       },
       "id": 10,
       "options": {
@@ -644,7 +690,7 @@
         "h": 4,
         "w": 4,
         "x": 12,
-        "y": 3
+        "y": 4
       },
       "id": 2,
       "options": {
@@ -709,7 +755,7 @@
         "h": 2,
         "w": 4,
         "x": 16,
-        "y": 3
+        "y": 4
       },
       "id": 8,
       "options": {
@@ -801,7 +847,7 @@
         "h": 4,
         "w": 4,
         "x": 20,
-        "y": 3
+        "y": 4
       },
       "id": 9,
       "options": {
@@ -864,7 +910,7 @@
         "h": 2,
         "w": 3,
         "x": 0,
-        "y": 5
+        "y": 6
       },
       "id": 17,
       "options": {
@@ -927,7 +973,7 @@
         "h": 2,
         "w": 2,
         "x": 16,
-        "y": 5
+        "y": 6
       },
       "id": 11,
       "options": {
@@ -993,7 +1039,7 @@
         "h": 2,
         "w": 2,
         "x": 18,
-        "y": 5
+        "y": 6
       },
       "id": 7,
       "options": {
@@ -1090,7 +1136,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 7
+        "y": 8
       },
       "id": 6,
       "options": {
@@ -1186,7 +1232,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 7
+        "y": 8
       },
       "id": 5,
       "options": {
@@ -1283,7 +1329,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 16
+        "y": 17
       },
       "id": 13,
       "options": {
@@ -1380,7 +1426,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 16
+        "y": 17
       },
       "id": 14,
       "options": {
@@ -1413,6 +1459,399 @@
       ],
       "title": "Pressure",
       "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 26
+      },
+      "id": 31,
+      "panels": [],
+      "title": "Air Quality",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byType",
+              "options": "time"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Living Room"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 227
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Mode"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 94
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "vesync_airpurifier.Filter Life {device_name: Basement}"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 424
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Living Room 1"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 153
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "vesync_airpurifier.Mode {device_name: Living Room}"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 232
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 27
+      },
+      "id": 34,
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "frameIndex": 2,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "vesync_airpurifier.Mode"
+          }
+        ]
+      },
+      "pluginVersion": "9.3.8",
+      "targets": [
+        {
+          "alias": "",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB}"
+          },
+          "hide": false,
+          "query": "SELECT \n  last(\"mode\") AS \"Mode\", \n  last(\"filter_life\") AS \"Filter Life\", \n  last(\"air_quality\") AS \"Air Quality\"\nFROM \"vesync_airpurifier\"\nWHERE $timeFilter\nGROUP BY \"device_name\"\n",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "Mode",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "device_name": "Room"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": false,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMax": 3,
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 25,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 2
+              },
+              {
+                "color": "red",
+                "value": 3
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "Living Room"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 33
+      },
+      "id": 29,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "alias": "$tag_device_name",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB}"
+          },
+          "query": "SELECT \"air_quality\" FROM \"vesync_airpurifier\"\nWHERE  $timeFilter\nGROUP BY \"device_name\"",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Air Quality",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "${DS_INFLUXDB}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": false,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMax": 3,
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 25,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 2
+              },
+              {
+                "color": "red",
+                "value": 3
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 33
+      },
+      "id": 35,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "alias": "$tag_device_name",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "${DS_INFLUXDB}"
+          },
+          "query": "SELECT \"filter_life\" FROM \"vesync_airpurifier\"\nWHERE  $timeFilter\nGROUP BY \"device_name\"",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Filter Life",
+      "type": "timeseries"
     }
   ],
   "refresh": "10s",
@@ -1423,13 +1862,13 @@
     "list": []
   },
   "time": {
-    "from": "now-30m",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Weather Station",
   "uid": "cy7yjiENk",
-  "version": 36,
+  "version": 55,
   "weekStart": ""
 }
