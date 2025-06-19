@@ -4,8 +4,8 @@ metadata:
   name: vesync-cronjob
   namespace: iot-stack
 spec:
-  # Run every 5 minutes
-  schedule: "*/5 * * * *"
+  # Run every hour
+  schedule: "0 * * * *"
   jobTemplate:
     spec:
       template:
