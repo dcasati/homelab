@@ -16,6 +16,8 @@ s = sun(city.observer, date=datetime.now(), tzinfo=pytz.timezone(TZ))
 
 sunrise_ts = int(s['sunrise'].timestamp() * 1e9)
 sunset_ts  = int(s['sunset'].timestamp()  * 1e9)
+print(f"[INFO] Sunrise: {s['sunrise']} (ts: {sunrise_ts})") 
+print(f"[INFO] Sunset:  {s['sunset']} (ts: {sunset_ts})")
 
 # Calculate daylight duration
 daylight = s['sunset'] - s['sunrise']
