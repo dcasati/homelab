@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana-funnel
+  namespace: observability
+  annotations:
+    tailscale.com/funnel: "true"
+spec:
+  rules:
+  - host: "grafana-funnel"  # This will be used in the Tailscale URL
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: grafana-kiosk-service
+            port:
+              number: 80
+  ingressClassName: tailscale
+  tls:
+  - hosts:
+    - "grafana-funnel"
