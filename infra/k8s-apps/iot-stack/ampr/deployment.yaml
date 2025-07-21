@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ampr-service
+  namespace: iot-stack
+  labels:
+    app: ampr
+spec:
+  type: ClusterIP
+  ports:
+  - port: 51820
+    targetPort: 51820
+    protocol: UDP
+    name: wireguard
+  selector:
+    app: ampr
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ampr
+  namespace: iot-stack
+  labels:
+    app: ampr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ampr
+  template:
+    metadata:
+      labels:
+        app: ampr
+    spec:
+      containers:
+      - name: ampr
+        image: ghcr.io/dcasati/ampr:sha-01ecbc7
+        ports:
+        - containerPort: 51820
+          protocol: UDP
+          name: wireguard
+        securityContext:
+          privileged: true
+          capabilities:
+            add:
+              - NET_ADMIN
+              - SYS_MODULE
+        env:
+        - name: WG_CONFIG_FILE
+          value: "/etc/wireguard/wg0.conf"
+        volumeMounts:
+        - name: ampr-wg-config
+          mountPath: /etc/wireguard
+          readOnly: true
+        - name: dev-net-tun
+          mountPath: /dev/net/tun
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+      volumes:
+      - name: ampr-wg-config
+        secret:
+          secretName: ampr-wg-secret
+          defaultMode: 0600
+      - name: dev-net-tun
+        hostPath:
+          path: /dev/net/tun
+          type: CharDevice
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet

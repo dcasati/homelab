@@ -6,6 +6,7 @@ resources:
   - influxdb/deployment.yaml
   - mosquitto/deployment.yaml
   - telegraf/deployment.yaml
+  - ampr/deployment.yaml
   - forecasting/configmap.yaml
   - forecasting/cronjob.yaml
   - sunrise/configmap.yaml
@@ -19,3 +20,5 @@ resources:
 images:
   - name: ghcr.io/dcasati/python-base
     newTag: sha-644c3a4
+  - name: ghcr.io/dcasati/ampr
+    newTag: sha-01ecbc7
