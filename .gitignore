@@ -1,3 +1,4 @@
 infra/.terraform.lock.hcl
 .envrc
 microk8s.config
+infra/k8s-apps/iot-stack/ampr/wg0.conf
