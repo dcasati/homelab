@@ -5,16 +5,19 @@ on:
     branches: [ main, develop ]
     paths:
       - 'infra/k8s-apps/base-images/**'
+      - 'infra/k8s-apps/ampr/**'
       - '.github/workflows/build-images.yml'
   pull_request:
     branches: [ main ]
     paths:
       - 'infra/k8s-apps/base-images/**'
+      - 'infra/k8s-apps/ampr/**'
       - '.github/workflows/build-images.yml'
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: dcasati/python-base
+  BASE_IMAGE_NAME: dcasati/python-base
+  AMPR_IMAGE_NAME: dcasati/ampr
 
 jobs:
   build-base-image:
@@ -41,7 +44,7 @@ jobs:
       id: meta
       uses: docker/metadata-action@v5
       with:
-        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        images: ${{ env.REGISTRY }}/${{ env.BASE_IMAGE_NAME }}
         tags: |
           type=raw,value=sha-{{sha}}
           type=ref,event=branch
@@ -51,7 +54,6 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: ./infra/k8s-apps/base-images
-        platforms: linux/amd64,linux/arm64
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
@@ -86,7 +88,56 @@ jobs:
         echo "Built and pushed images:"
         echo "${{ steps.meta.outputs.tags }}"
         echo ""
-        echo "Primary tag: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }}"
+        echo "Primary tag: ${{ env.REGISTRY }}/${{ env.BASE_IMAGE_NAME }}:sha-${{ github.sha }}"
         echo ""
         echo "Kustomization.yaml automatically updated"
         echo "ArgoCD will sync the new image automatically"
+
+  build-ampr-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Log in to Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Extract metadata for AMPR
+      id: meta-ampr
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.AMPR_IMAGE_NAME }}
+        tags: |
+          type=raw,value=sha-{{sha}}
+          type=ref,event=branch
+          type=ref,event=pr
+
+    - name: Build and push AMPR Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./infra/k8s-apps/ampr
+        push: true
+        tags: ${{ steps.meta-ampr.outputs.tags }}
+        labels: ${{ steps.meta-ampr.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    - name: Output AMPR completion details
+      run: |
+        echo "AMPR build completed!"
+        echo ""
+        echo "Built and pushed AMPR images:"
+        echo "${{ steps.meta-ampr.outputs.tags }}"
+        echo ""
+        echo "Primary tag: ${{ env.REGISTRY }}/${{ env.AMPR_IMAGE_NAME }}:sha-${{ github.sha }}"
