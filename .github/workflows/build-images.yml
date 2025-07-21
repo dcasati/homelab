@@ -74,19 +74,19 @@ jobs:
           git add infra/k8s-apps/iot-stack/kustomization.yaml
           git commit -m "Auto-update python-base image to sha-${{ github.sha }}"
           git push
-          echo "✅ Kustomization updated and pushed automatically"
+          echo "Kustomization updated and pushed automatically"
         else
           echo "No changes to commit"
         fi
 
     - name: Output completion details
       run: |
-        echo "🎉 Build and deployment update completed!"
+        echo "Build and deployment update completed!"
         echo ""
         echo "Built and pushed images:"
         echo "${{ steps.meta.outputs.tags }}"
         echo ""
         echo "Primary tag: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }}"
         echo ""
-        echo "✅ Kustomization.yaml automatically updated"
-        echo "✅ ArgoCD will sync the new image automatically"
+        echo "Kustomization.yaml automatically updated"
+        echo "ArgoCD will sync the new image automatically"

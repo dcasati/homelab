@@ -1,0 +1,30 @@
+#cloud-config
+hostname: "ubuntu-server"
+package_update: true
+package_upgrade: true
+packages:
+  - qemu-guest-agent
+  - net-tools
+  - curl
+  - wget
+  - vim
+  - htop
+  - unzip
+users:
+  - default
+  - name: dcasati
+    groups:
+      - sudo
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINY8q+Ww2leih7SMZQqaM8a7CyCD1rI8EJ9oKeQbDjq9 dcasati@WIN-THINK24
+    sudo: ALL=(ALL) NOPASSWD:ALL
+runcmd:
+  - apt update
+  - apt install -y qemu-guest-agent net-tools curl wget vim htop unzip
+  - timedatectl set-timezone America/Edmonton
+  - systemctl enable qemu-guest-agent
+  - systemctl start qemu-guest-agent
+  - systemctl enable ssh
+  - systemctl start ssh
+final_message: "Ubuntu server setup complete!"
