@@ -50,8 +50,10 @@ spec:
           value: "/etc/wireguard/wg0.conf"
         volumeMounts:
         - name: ampr-wg-config
-          mountPath: /etc/wireguard
+          mountPath: /etc/wireguard-ro
           readOnly: true
+        - name: wireguard-config
+          mountPath: /etc/wireguard
         - name: dev-net-tun
           mountPath: /dev/net/tun
         resources:
@@ -61,11 +63,27 @@ spec:
           limits:
             memory: "128Mi"
             cpu: "100m"
+      initContainers:
+      - name: setup-wg-config
+        image: ghcr.io/dcasati/ampr:sha-01ecbc7
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            cp /etc/wireguard-ro/wg0.conf /etc/wireguard/wg0.conf
+            chmod 600 /etc/wireguard/wg0.conf
+        volumeMounts:
+        - name: ampr-wg-config
+          mountPath: /etc/wireguard-ro
+          readOnly: true
+        - name: wireguard-config
+          mountPath: /etc/wireguard
       volumes:
       - name: ampr-wg-config
         secret:
           secretName: ampr-wg-secret
           defaultMode: 0600
+      - name: wireguard-config
+        emptyDir: {}
       - name: dev-net-tun
         hostPath:
           path: /dev/net/tun
