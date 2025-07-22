@@ -92,6 +92,7 @@ metadata:
     app: mosquitto
 spec:
   type: LoadBalancer
+  loadBalancer: 172.16.5.241
   ports:
   - port: 1883
     targetPort: 1883
