@@ -38,16 +38,16 @@ b) Make sure that you add `tag:k8s` and `tag:k8s-operator` to these scopes.
 Save the `Oath ID` and `Oath Secret` to these variables:
 
 ```bash
-export TAILSCALE_OATH_CLIENT_SECRET=TAILSCALE_OATH_CLIENT_ID
+export TAILSCALE_OATH_CLIENT_ID=YOUR_TAILSCALE_OATH_CLIENT_ID
 export TAILSCALE_OATH_CLIENT_SECRET=YOUR_TAILSCALE_OATH_CLIENT_SECRET  
 ```
 
 Install the Tailscale Operator through Helm
 
 ```bash
-1. helm repo add tailscale https://pkgs.tailscale.com/helmcharts
-2. helm repo update
-3. helm upgrade \
+helm repo add tailscale https://pkgs.tailscale.com/helmcharts
+helm repo update
+helm upgrade \
     --install tailscale-operator tailscale/tailscale-operator \
     --namespace=tailscale \
     --create-namespace \
