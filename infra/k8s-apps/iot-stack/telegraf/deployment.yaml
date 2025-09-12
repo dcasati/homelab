@@ -31,13 +31,13 @@ data:
         "mxchip/telemetry"
       ]
       data_format = "json"
-      #json_string_fields = ["device_id", "location", "model", "id", "channel"]
+      json_string_fields = ["device_id", "location", "model", "id", "channel"]
       tag_keys = ["device", "model", "location", "topic", "id"]
 
-      # [[processors.rename]]
-      # [[processors.rename.replace]]
-      #   tag = "model"
-      #   dest = "device"
+      [[processors.rename]]
+      [[processors.rename.replace]]
+        tag = "model"
+        dest = "device"
 
     [[processors.enum]]
       namepass = ["mqtt_consumer"]
