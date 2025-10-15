@@ -8,28 +8,31 @@ metadata:
 spec:
   description: Homelab applications
   sourceRepos:
-  - 'git@github.com:dcasati/homelab.git'
-  - 'https://github.com/dcasati/homelab.git'
+    - 'https://github.com/dcasati/homelab.git'
+    - 'git@github.com:dcasati/homelab.git'
+    - 'https://charts.gabe565.com'        # <-- allow Home Assistant Helm repo
   destinations:
-  - namespace: 'iot-stack'
-    server: https://kubernetes.default.svc
-  - namespace: 'monitoring'
-    server: https://kubernetes.default.svc
-  - namespace: 'argocd'
-    server: https://kubernetes.default.svc
+    - namespace: 'iot-stack'
+      server: https://kubernetes.default.svc
+    - namespace: 'monitoring'
+      server: https://kubernetes.default.svc
+    - namespace: 'argocd'
+      server: https://kubernetes.default.svc
+    - namespace: 'home-assistant'          # <-- add this
+      server: https://kubernetes.default.svc
   clusterResourceWhitelist:
-  - group: ''
-    kind: Namespace
-  - group: 'rbac.authorization.k8s.io'
-    kind: ClusterRole
-  - group: 'rbac.authorization.k8s.io'
-    kind: ClusterRoleBinding
+    - group: ''
+      kind: Namespace
+    - group: 'rbac.authorization.k8s.io'
+      kind: ClusterRole
+    - group: 'rbac.authorization.k8s.io'
+      kind: ClusterRoleBinding
   namespaceResourceWhitelist:
-  - group: ''
-    kind: '*'
-  - group: 'apps'
-    kind: '*'
-  - group: 'batch'
-    kind: '*'
-  - group: 'extensions'
-    kind: '*'
+    - group: ''
+      kind: '*'
+    - group: 'apps'
+      kind: '*'
+    - group: 'batch'
+      kind: '*'
+    - group: 'extensions'
+      kind: '*'
