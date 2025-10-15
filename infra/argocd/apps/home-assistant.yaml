@@ -3,77 +3,75 @@ kind: Application
 metadata:
   name: home-assistant
   namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
 spec:
   project: homelab
   source:
     repoURL: https://charts.gabe565.com
     chart: home-assistant
-    targetRevision: 0.17.0
+    targetRevision: 1.5.0
     helm:
       values: |
+        controller:
+          type: statefulset
+          annotations:
+            reloader.stakater.com/auto: "true"
+          initContainers:
+            hacs-installer:
+              image: alpine:3.20
+              command: ["/bin/sh", "-c"]
+              args:
+                - |
+                  set -e
+                  apk add --no-cache curl unzip
+                  mkdir -p /config/custom_components
+                  URL=$(curl -fsSL https://api.github.com/repos/hacs/integration/releases/latest \
+                    | sed -n 's/.*"browser_download_url": *"\(.*zip\)".*/\1/p')
+                  echo "Downloading $URL"
+                  curl -fsSL "$URL" -o /tmp/hacs.zip
+                  unzip -o /tmp/hacs.zip -d /config/custom_components
+                  chown -R 1000:1000 /config/custom_components/hacs || true
+              volumeMounts:
+                - name: config
+                  mountPath: /config
+        image:
+          repository: ghcr.io/home-assistant/home-assistant
+          tag: stable
         env:
-          - name: TZ
-            value: America/Edmonton
-
+          TZ: America/Edmonton
         persistence:
           config:
             enabled: true
-            size: 10Gi
-            storageClass: ""        # set your CSI storage class (e.g., "local-path", "longhorn")
-            accessModes: ["ReadWriteOnce"]
-
+            existingClaim: home-assistant-config
+            mountPath: /config
         service:
           main:
-            enabled: true
-            type: LoadBalancer
             ports:
               http:
                 port: 8123
-            loadBalancerIP: 172.16.5.245
-            externalTrafficPolicy: Cluster
-            annotations:
-              metallb.universe.tf/address-pool: default
-
         ingress:
           main:
-            enabled: false
-
-        resources:
-          requests:
-            cpu: "100m"
-            memory: "256Mi"
-          limits:
-            memory: "1Gi"
-
-        podSecurityContext:
-          fsGroup: 1000
+            enabled: true
+            ingressClassName: nginx
+            hosts:
+              - host: ha.dcasati.net
+                paths:
+                  - path: /
+                    pathType: Prefix
+            tls:
+              - hosts:
+                  - ha.dcasati.net
         securityContext:
           runAsUser: 1000
           runAsGroup: 1000
-
+          fsGroup: 1000
+          runAsNonRoot: true
   destination:
     server: https://kubernetes.default.svc
-    namespace: home-assistant
-
+    namespace: iot-stack
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-    retry:
-      limit: 5
-      backoff:
-        duration: 5s
-        factor: 2
-        maxDuration: 3m0s
-
-  ignoreDifferences:
-    - group: apps
-      kind: Deployment
-      name: home-assistant
-      namespace: home-assistant
-      jsonPointers:
-        - /spec/selector
+      - ApplyOutOfSyncOnly=true
