@@ -1,0 +1,197 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mqtt-discovery-bridge-script
+  namespace: home-assistant
+data:
+  bridge.py: |
+    import json, os
+    import paho.mqtt.client as mqtt
+
+    BROKER      = os.getenv("MQTT_BROKER", "mqtt.dcasati.net")
+    PORT        = int(os.getenv("MQTT_PORT", "1883"))
+    SRC_TOPIC   = os.getenv("SRC_TOPIC", "sensors")
+    DISC_PREFIX = os.getenv("DISC_PREFIX", "homeassistant")
+    STATE_ROOT  = os.getenv("STATE_ROOT", "home")
+
+    published = set()
+
+    # Per-model entity maps:
+    #   component -> key -> (Friendly Name, unit, device_class, value_template)
+    MODEL_FIELDS = {
+        "az3166": {
+            "sensor": {
+                "temperature": ("Temperature", "°C", "temperature", "{{ value_json.temperature }}"),
+                "humidity":    ("Humidity", "%",   "humidity",    "{{ value_json.humidity }}"),
+                "pressure":    ("Pressure", "hPa", "pressure",    "{{ value_json.pressure }}"),
+                "accel_x":     ("Accel X",  "g",   None,          "{{ value_json.accel.x }}"),
+                "accel_y":     ("Accel Y",  "g",   None,          "{{ value_json.accel.y }}"),
+                "accel_z":     ("Accel Z",  "g",   None,          "{{ value_json.accel.z }}"),
+                "gyro_x":      ("Gyro X",   "°/s", None,          "{{ value_json.gyro.x }}"),
+                "gyro_y":      ("Gyro Y",   "°/s", None,          "{{ value_json.gyro.y }}"),
+                "gyro_z":      ("Gyro Z",   "°/s", None,          "{{ value_json.gyro.z }}"),
+                "mag_x":       ("Mag X",    "µT",  None,          "{{ value_json.mag.x }}"),
+                "mag_y":       ("Mag Y",    "µT",  None,          "{{ value_json.mag.y }}"),
+                "mag_z":       ("Mag Z",    "µT",  None,          "{{ value_json.mag.z }}"),
+            }
+        },
+
+        # Acurite 5-in-1 payload example:
+        # {"time":"...","model":"Acurite-5n1","id":2316,"battery_ok":0,"wind_avg_km_h":0,"temperature_F":40.1,"humidity":91,...}
+        "acurite-5n1": {
+            "sensor": {
+                "temperature_c": ("Temperature", "°C", "temperature",
+                                  "{{ ((value_json.temperature_F - 32) * 5/9) | round(1) }}"),
+                "humidity":      ("Humidity", "%", "humidity", "{{ value_json.humidity }}"),
+                "wind_avg_km_h": ("Wind Avg", "km/h", None, "{{ value_json.wind_avg_km_h }}"),
+            },
+            "binary_sensor": {
+                # device_class battery: ON means "battery LOW". Invert battery_ok (1=ok, 0=low)
+                "battery_low": ("Battery Low", None, "battery",
+                                "{{ 'ON' if value_json.battery_ok == 0 else 'OFF' }}"),
+            },
+        },
+    }
+
+    def disc_topic(component, obj, dev, key): return f"{DISC_PREFIX}/{component}/{obj}_{dev}_{key}/config"
+    def state_topic(obj, dev): return f"{STATE_ROOT}/{obj}/{dev}/state"
+    def avail_topic(obj, dev): return f"{STATE_ROOT}/{obj}/{dev}/availability"
+
+    def exists_in_payload(payload, jinja_expr):
+        # Quick existence check for nested templates like "{{ value_json.accel.x }}"
+        try:
+            path = jinja_expr.replace("{{", "").replace("}}", "").strip()
+            if not path.startswith("value_json"):
+                return True
+            parts = path.split(".", 1)[1].split(".")
+            cur = payload
+            for p in parts:
+                p = p.strip()
+                if isinstance(cur, dict) and p in cur:
+                    cur = cur[p]
+                else:
+                    return False
+            return cur is not None
+        except Exception:
+            return False
+
+    def publish_discovery(client, payload):
+        # Device identity: prefer 'device', else 'id'
+        raw_dev = payload.get("device") or payload.get("id") or "unknown"
+        dev = str(raw_dev).replace(" ", "_")
+        model = str(payload.get("model") or "unknown").lower()
+        obj = model  # object namespace
+        st = state_topic(obj, dev)
+        at = avail_topic(obj, dev)
+
+        # Mark device online
+        client.publish(at, "online", retain=True)
+
+        # Use model-specific map if known, else generic fields
+        fields_map = MODEL_FIELDS.get(model, {
+            "sensor": {
+                "temperature": ("Temperature", "°C", "temperature", "{{ value_json.temperature }}"),
+                "humidity":    ("Humidity", "%",   "humidity",    "{{ value_json.humidity }}"),
+                "pressure":    ("Pressure", "hPa", "pressure",    "{{ value_json.pressure }}"),
+            }
+        })
+
+        device_block = {
+            "identifiers": [f"{obj}_{dev}"],
+            "name": f"{raw_dev} ({model})",
+            "model": model,
+            "manufacturer": "custom",
+        }
+
+        # Publish entities
+        for component, listing in fields_map.items():
+            for key, (fname, unit, dclass, jinja) in listing.items():
+                if not exists_in_payload(payload, jinja):
+                    continue
+                uid = f"{obj}_{dev}_{key}".lower()
+                cfg = {
+                    "name": f"{raw_dev} {fname}",
+                    "uniq_id": uid,
+                    "stat_t": st,
+                    "avty_t": at,
+                    "json_attr_t": st,
+                    "val_tpl": jinja,
+                    "dev": device_block,
+                }
+                if unit:   cfg["unit_of_meas"] = unit
+                if dclass: cfg["dev_cla"] = dclass
+
+                topic = disc_topic(component, obj, dev, key)
+                if component == "binary_sensor":
+                    cfg["payload_on"]  = "ON"
+                    cfg["payload_off"] = "OFF"
+                client.publish(topic, json.dumps(cfg), retain=True)
+
+        return st
+
+    def on_connect(client, userdata, flags, rc, props=None):
+        client.subscribe(SRC_TOPIC, qos=0)
+
+    def on_message(client, userdata, msg):
+        try:
+            payload = json.loads(msg.payload.decode("utf-8"))
+        except Exception:
+            return
+        raw_dev = payload.get("device") or payload.get("id") or "unknown"
+        dev = str(raw_dev).replace(" ", "_")
+        model = str(payload.get("model") or "unknown").lower()
+        obj = model
+        key = f"{obj}|{dev}"
+        if key not in published:
+            publish_discovery(client, payload)
+            published.add(key)
+        # Always republish raw JSON to per-device state topic
+        client.publish(state_topic(obj, dev), json.dumps(payload), retain=True)
+
+    client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, client_id="ha-mqtt-discovery-bridge", clean_session=True)
+    client.on_connect = on_connect
+    client.on_message = on_message
+    client.will_set("home/adapter/ha_discovery/lwt", "offline", retain=True)
+    client.connect(BROKER, PORT, keepalive=60)
+    client.loop_forever()
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mqtt-discovery-bridge
+  namespace: home-assistant
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mqtt-discovery-bridge
+  template:
+    metadata:
+      labels:
+        app: mqtt-discovery-bridge
+    spec:
+      containers:
+        - name: bridge
+          image: python:3.12-alpine
+          command: ["sh", "-c"]
+          args:
+            - pip install --no-cache-dir paho-mqtt && python /app/bridge.py
+          env:
+            - name: MQTT_BROKER
+              value: "mqtt.dcasati.net"
+            - name: MQTT_PORT
+              value: "1883"
+            - name: SRC_TOPIC
+              value: "sensors"
+            - name: DISC_PREFIX
+              value: "homeassistant"
+            - name: STATE_ROOT
+              value: "home"
+          volumeMounts:
+            - name: script
+              mountPath: /app/bridge.py
+              subPath: bridge.py
+      volumes:
+        - name: script
+          configMap:
+            name: mqtt-discovery-bridge-script
