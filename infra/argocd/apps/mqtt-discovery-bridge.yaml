@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/dcasati/homelab.git
     targetRevision: main
-    path: infra/manifests/mqtt-discovery-bridge
+    path: infra/k8s-apps/iot-stack/mqtt-discovery-bridge/deployment.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: home-assistant
