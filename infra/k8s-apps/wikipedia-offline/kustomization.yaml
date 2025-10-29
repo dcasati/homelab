@@ -9,6 +9,4 @@ resources:
   - configmap.zim-urls.yaml
   - deployment.yaml
   - service.yaml
-    #  - ingress.yaml
   - cronjob-refresh.yaml  # optional
-
