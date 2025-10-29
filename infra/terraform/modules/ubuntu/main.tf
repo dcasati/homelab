@@ -2,6 +2,16 @@ data "local_file" "ssh_public_key" {
   filename = pathexpand("~/.ssh/id_rsa.pub")
 }
 
+# Use data source to find existing files in the datastore
+data "proxmox_virtual_environment_datastores" "iso_datastore" {
+  node_name = var.proxmox_node_name
+}
+
+# Since we can't import the file easily, we'll reference it directly by its expected ID format
+locals {
+  cloud_image_id = "${var.proxmox_iso_storage_pool}:iso/jammy-server-cloudimg-amd64.img"
+}
+
 resource "proxmox_virtual_environment_vm" "ubuntu_vm" {
   vm_id       = var.vmid
   node_name   = var.proxmox_node_name
@@ -17,13 +27,19 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vm" {
     dedicated = var.vm_settings.memory_gb * 1024 
   }
 
+  agent {
+    enabled = true
+    trim    = true
+    type    = "virtio"
+  }
+
   network_device {
     bridge = var.networking_settings.bridge
   }
 
   disk {
     datastore_id = var.proxmox_vm_disk_storage_pool
-    file_id      = proxmox_virtual_environment_download_file.ubuntu_cloud_image.id
+    file_id      = local.cloud_image_id
     interface    = "virtio0"
     iothread     = true
     discard      = "on"
@@ -33,8 +49,8 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vm" {
   initialization {
     ip_config {
       ipv4 {
-        address = var.networking_settings.ip_config_ipv4
-        gateway = var.networking_settings.ip_config_gateway
+        address = var.networking_settings.ip_config_ipv4 == "dhcp" ? "dhcp" : var.networking_settings.ip_config_ipv4
+        gateway = var.networking_settings.ip_config_ipv4 == "dhcp" ? null : var.networking_settings.ip_config_gateway
       }
     }
 
@@ -48,25 +64,16 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vm" {
 
   tags = ["ubuntu", var.vm_settings.suffix]
 
-  lifecycle {
-    ignore_changes = [
-      network_device,
-    ]
-  }
+  depends_on = [
+    proxmox_virtual_environment_file.cloud_init_config
+  ]
 }
 
 resource "proxmox_virtual_environment_file" "cloud_init_config" {
-  node_name    = var.proxmox_node_name
   content_type = "snippets"
   datastore_id = var.proxmox_snippets_storage_pool
+  node_name    = var.proxmox_node_name
   source_file {
     path = var.cloud_init_file_path
   }
-}
-
-resource "proxmox_virtual_environment_download_file" "ubuntu_cloud_image" {
-  content_type = "iso"
-  datastore_id = var.proxmox_iso_storage_pool
-  node_name    = var.proxmox_node_name
-  url          = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
 }

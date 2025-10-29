@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zim-urls
+  namespace: wikipedia-offline
+data:
+  urls.txt: |
+    # pick ONE to start; comment others
+    https://download.kiwix.org/zim/wikipedia/wikipedia_en_all_nopic.zim
+    # https://download.kiwix.org/zim/wikipedia/wikipedia_en_mini.zim
+    # https://download.kiwix.org/zim/wikipedia/wikipedia_it_all_nopic.zim
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zim-urls
+  namespace: wikipedia-offline
+data:
+  urls.txt: |
+    # pick ONE to start; comment others
+    https://download.kiwix.org/zim/wikipedia/wikipedia_en_all_nopic.zim
+    # https://download.kiwix.org/zim/wikipedia/wikipedia_en_mini.zim
+    # https://download.kiwix.org/zim/wikipedia/wikipedia_it_all_nopic.zim
+

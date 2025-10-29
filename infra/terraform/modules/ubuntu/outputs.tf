@@ -9,8 +9,22 @@ output "vm_name" {
 }
 
 output "ip_address" {
-  value       = var.networking_settings.ip_config_ipv4
-  description = "The IP address of the Ubuntu server."
+  value       = length(proxmox_virtual_environment_vm.ubuntu_vm.ipv4_addresses) > 1 ? proxmox_virtual_environment_vm.ubuntu_vm.ipv4_addresses[1] : (length(proxmox_virtual_environment_vm.ubuntu_vm.ipv4_addresses) == 1 ? proxmox_virtual_environment_vm.ubuntu_vm.ipv4_addresses[0] : "VM booting - IP not yet detected by Proxmox")
+  description = "The IP address of the Ubuntu server (DHCP assigned)."
+}
+
+output "all_ip_addresses" {
+  value       = proxmox_virtual_environment_vm.ubuntu_vm.ipv4_addresses
+  description = "All IPv4 addresses detected by Proxmox for this VM."
+}
+
+output "vm_status" {
+  value = {
+    started    = proxmox_virtual_environment_vm.ubuntu_vm.started
+    mac_address = length(proxmox_virtual_environment_vm.ubuntu_vm.mac_addresses) > 0 ? proxmox_virtual_environment_vm.ubuntu_vm.mac_addresses[0] : "No MAC detected"
+    ip_count   = length(proxmox_virtual_environment_vm.ubuntu_vm.ipv4_addresses)
+  }
+  description = "Status information for the Ubuntu VM."
 }
 
 output "vm_node" {

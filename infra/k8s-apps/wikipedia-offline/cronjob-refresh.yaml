@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: zim-monthly-refresh
+  namespace: wikipedia-offline
+spec:
+  schedule: "0 3 1 * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: fetch-zims
+              image: alpine:3.20
+              command:
+                - /bin/sh
+                - -ce
+                - |
+                  set -eu
+                  apk add --no-cache wget ca-certificates
+                  while read -r url; do
+                    case "$url" in ""|\#*) continue ;; esac
+                    fname="/data/$(basename "$url")"
+                    [ -f "$fname" ] && { echo "Have $fname"; continue; }
+                    echo "Downloading $url"
+                    wget -O "$fname" "$url"
+                  done < /cfg/urls.txt
+              volumeMounts:
+                - name: data
+                  mountPath: /data
+                - name: zim-urls
+                  mountPath: /cfg
+          volumes:
+            - name: data
+              persistentVolumeClaim: { claimName: zim-data }
+            - name: zim-urls
+              configMap:
+                name: zim-urls
+                items: [{ key: urls.txt, path: urls.txt }]
+
+

@@ -23,9 +23,9 @@ module "microk8s" {
 
   vm_settings = {
     suffix        = each.value == 0 ? "main" : "worker-${each.value}"
-    cpu_cores     = 2 // Changed to 4 for all nodes
-    memory_gb     = 8 // Changed to 4 for all nodes
-    disk_size_gb  = 20
+    cpu_cores     = 4 // Changed to 4 for all nodes
+    memory_gb     = 24 // Changed to 4 for all nodes
+    disk_size_gb  = 200
   }
 
   networking_settings = {

@@ -1,7 +1,7 @@
 variable "nodes" {
   description = "Total number of MicroK8s virtual machines (e.g., 1 main + 2 workers = 3)"
   type        = number
-  default     = 3
+  default     = 1
 }
 
 variable "admin_username" {
