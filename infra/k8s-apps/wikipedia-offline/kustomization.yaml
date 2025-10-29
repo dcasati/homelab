@@ -6,7 +6,7 @@ namespace: wikipedia-offline
 resources:
   - ns.yaml
   - pvc.yaml
-  - configmap.zim-urls.yaml
   - deployment.yaml
   - service.yaml
   - cronjob-refresh.yaml  # optional
+  - configmap.zim-urls.yaml
