@@ -9,8 +9,7 @@ spec:
   description: Homelab applications
   sourceRepos:
     - 'https://github.com/dcasati/homelab.git'
-    - 'git@github.com:dcasati/homelab.git'
-    - 'https://charts.gabe565.com'        # <-- allow Home Assistant Helm repo
+    - 'https://charts.gabe565.com'       
   destinations:
     - namespace: 'iot-stack'
       server: https://kubernetes.default.svc
@@ -18,7 +17,7 @@ spec:
       server: https://kubernetes.default.svc
     - namespace: 'argocd'
       server: https://kubernetes.default.svc
-    - namespace: 'home-assistant'          # <-- add this
+    - namespace: 'home-assistant'       
       server: https://kubernetes.default.svc
   clusterResourceWhitelist:
     - group: ''
