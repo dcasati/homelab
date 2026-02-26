@@ -56,7 +56,7 @@ spec:
             loadBalancerIP: 172.16.5.245
             externalTrafficPolicy: Cluster
             annotations:
-              metallb.universe.tf/address-pool: default
+              metallb.universe.tf/address-pool: default-addresspool
 
         ingress:
           main:
