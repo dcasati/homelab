@@ -1,0 +1,27 @@
+USER-SUPPLIED VALUES:
+externalDB:
+  enabled: true
+  externalConnectionString: mattermost:CHANGE_ME@mattermost-postgresql:5432/mattermost?sslmode=disable
+  externalDriverType: postgres
+ingress:
+  enabled: false
+mysql:
+  enabled: false
+persistence:
+  data:
+    enabled: true
+    size: 10Gi
+    storageClass: microk8s-hostpath
+  plugins:
+    enabled: true
+    size: 1Gi
+    storageClass: microk8s-hostpath
+resources:
+  limits:
+    cpu: 2000m
+    memory: 2Gi
+  requests:
+    cpu: 500m
+    memory: 512Mi
+service:
+  type: LoadBalancer

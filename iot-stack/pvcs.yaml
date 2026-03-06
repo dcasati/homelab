@@ -1,0 +1,38 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolumeClaim","metadata":{"annotations":{},"name":"mosquitto-data-pvc","namespace":"iot-stack"},"spec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"1Gi"}},"storageClassName":"microk8s-hostpath"}}
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-provisioner: microk8s.io/hostpath
+      volume.kubernetes.io/selected-node: microk8s
+      volume.kubernetes.io/storage-provisioner: microk8s.io/hostpath
+    creationTimestamp: "2026-03-01T01:57:24Z"
+    finalizers:
+    - kubernetes.io/pvc-protection
+    name: mosquitto-data-pvc
+    namespace: iot-stack
+    resourceVersion: "42274"
+    uid: f0e31d13-ab17-49a7-afd9-e5fe84d1fd01
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 1Gi
+    storageClassName: microk8s-hostpath
+    volumeMode: Filesystem
+    volumeName: pvc-f0e31d13-ab17-49a7-afd9-e5fe84d1fd01
+  status:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 1Gi
+    phase: Bound
+kind: List
+metadata:
+  resourceVersion: ""

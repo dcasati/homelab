@@ -1,0 +1,50 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{"metallb.universe.tf/loadBalancerIPs":"REDACTED"},"labels":{"app":"mosquitto"},"name":"mosquitto-service","namespace":"iot-stack"},"spec":{"ports":[{"name":"mqtt","port":1883,"targetPort":1883},{"name":"websocket","port":9001,"targetPort":9001}],"selector":{"app":"mosquitto"},"type":"LoadBalancer"}}
+      metallb.io/ip-allocated-from-pool: default-addresspool
+      metallb.universe.tf/loadBalancerIPs: REDACTED
+    creationTimestamp: "2026-03-01T01:57:24Z"
+    labels:
+      app: mosquitto
+    name: mosquitto-service
+    namespace: iot-stack
+    resourceVersion: "42409"
+    uid: 4188d732-aced-4c8b-b7bb-6ad5ae48a06a
+  spec:
+    allocateLoadBalancerNodePorts: true
+    clusterIP: 10.152.183.18
+    clusterIPs:
+    - 10.152.183.18
+    externalTrafficPolicy: Cluster
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: mqtt
+      nodePort: 30544
+      port: 1883
+      protocol: TCP
+      targetPort: 1883
+    - name: websocket
+      nodePort: 31288
+      port: 9001
+      protocol: TCP
+      targetPort: 9001
+    selector:
+      app: mosquitto
+    sessionAffinity: None
+    type: LoadBalancer
+  status:
+    loadBalancer:
+      ingress:
+      - ip: REDACTED
+        ipMode: VIP
+kind: List
+metadata:
+  resourceVersion: ""

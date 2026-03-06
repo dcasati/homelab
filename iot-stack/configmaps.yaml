@@ -1,0 +1,66 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  data:
+    ca.crt: |
+      -----BEGIN CERTIFICATE-----
+      MIIDDzCCAfegAwIBAgIUDWqnWTC2+iwjp73XC4TfqckyD1owDQYJKoZIhvcNAQEL
+      BQAwFzEVMBMGA1UEAwwMMTAuMTUyLjE4My4xMB4XDTI2MDIyODIwNTg1NFoXDTM2
+      MDIyNjIwNTg1NFowFzEVMBMGA1UEAwwMMTAuMTUyLjE4My4xMIIBIjANBgkqhkiG
+      9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsguyZ/W7doobVoa8svJ3sdHVPL8OGJ9cmSo8
+      jac/zb0DV8A/MbtqWGGKEscEYwao96E9JGyDDFzfVnwAkwaf1kv4gASijBUv9iey
+      dJ8onro7WVYvf89o/4NZYjyp81/elmDiOzJcnoUH3E+9L4mIOoBPBIqvEoNzhUYT
+      4AFZWoFfKj5iEImfbtThX2w1S5uAqdw7H+t9BNBqn8BImKn5IGb4qS4bOr/RSjnC
+      hMeAWmQ5QHxC1P+ma8RwyvXMyrRExU2YYSirtBmNcFoIB0/VDsmYHPe1kPZJl7o+
+      qrvNC/PZmFBBeNJ5iNeUsD23YiYEoVZCsuQftoVfM5DRSaei7QIDAQABo1MwUTAd
+      BgNVHQ4EFgQUy+ekMJhdnbbRBRPVpiNM9f0wsIcwHwYDVR0jBBgwFoAUy+ekMJhd
+      nbbRBRPVpiNM9f0wsIcwDwYDVR0TAQH/BAUwAwEB/zANBgkqhkiG9w0BAQsFAAOC
+      AQEAqiFJnbHl8gAKgQdZ4XEMQd6qGkdJdP/wmTAePCRS3X4P6v3yoKQf+Mc2hkCz
+      Pi596OYav1DkDBWLhkzgZf5lANVVkPbdhC2Nvez43/BwiwcfdvOZmcxlZrwGmMaZ
+      chQd7bWzIAjoiZf9TO8ndQWJBD9RWUrX6PjlbFQNXy0i9aDfElZOoBR/8Hf6PJLb
+      9VoasB8ijVuQVLRO4mySHuKtJuGvlJThUfiAa+rBliHrvysA5d6+oGuPa1s6nuzH
+      td2VKEHo5c+uBcc1/FwWDr8sHRYVqgDh4416Lj4Ia4pCr/G1rtvk6Ntf4SQYk1AD
+      RF4vUvpXBFvvNdoUiLD89HBnFA==
+      -----END CERTIFICATE-----
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubernetes.io/description: Contains a CA bundle that can be used to verify the
+        kube-apiserver when using internal endpoints such as the internal service
+        IP or kubernetes.default.svc. No other usage is guaranteed across distributions
+        of Kubernetes clusters.
+    creationTimestamp: "2026-03-01T01:57:19Z"
+    name: kube-root-ca.crt
+    namespace: iot-stack
+    resourceVersion: "42199"
+    uid: 421f4cca-7e26-44f6-a250-5edaa5ebefd8
+- apiVersion: v1
+  data:
+    mosquitto.conf: |
+      persistence true
+      persistence_location /mosquitto/data/
+      log_dest file /mosquitto/log/mosquitto.log
+      log_dest stdout
+      log_type error
+      log_type warning
+      log_type notice
+      log_type information
+      connection_messages true
+      log_timestamp true
+      allow_anonymous true
+      listener 1883
+      listener 9001
+      protocol websockets
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","data":{"mosquitto.conf":"persistence true\npersistence_location /mosquitto/data/\nlog_dest file /mosquitto/log/mosquitto.log\nlog_dest stdout\nlog_type error\nlog_type warning\nlog_type notice\nlog_type information\nconnection_messages true\nlog_timestamp true\nallow_anonymous true\nlistener 1883\nlistener 9001\nprotocol websockets\n"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"mosquitto-config","namespace":"iot-stack"}}
+    creationTimestamp: "2026-03-01T01:57:24Z"
+    name: mosquitto-config
+    namespace: iot-stack
+    resourceVersion: "42211"
+    uid: ed7e1762-6d72-4486-aa51-ab2605797ada
+kind: List
+metadata:
+  resourceVersion: ""

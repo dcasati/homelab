@@ -1,0 +1,216 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolumeClaim","metadata":{"annotations":{},"labels":{"app.kubernetes.io/part-of":"caal"},"name":"caal-config","namespace":"caal"},"spec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"100Mi"}}}}
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-provisioner: microk8s.io/hostpath
+      volume.kubernetes.io/selected-node: microk8s
+      volume.kubernetes.io/storage-provisioner: microk8s.io/hostpath
+    creationTimestamp: "2026-03-01T14:59:13Z"
+    finalizers:
+    - kubernetes.io/pvc-protection
+    labels:
+      app.kubernetes.io/part-of: caal
+    name: caal-config
+    namespace: caal
+    resourceVersion: "149385"
+    uid: ecfbccfb-08c8-41fb-b664-5627b79fdeea
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 100Mi
+    storageClassName: microk8s-hostpath
+    volumeMode: Filesystem
+    volumeName: pvc-ecfbccfb-08c8-41fb-b664-5627b79fdeea
+  status:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 100Mi
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolumeClaim","metadata":{"annotations":{},"labels":{"app.kubernetes.io/part-of":"caal"},"name":"caal-memory","namespace":"caal"},"spec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"1Gi"}}}}
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-provisioner: microk8s.io/hostpath
+      volume.kubernetes.io/selected-node: microk8s
+      volume.kubernetes.io/storage-provisioner: microk8s.io/hostpath
+    creationTimestamp: "2026-03-01T14:59:13Z"
+    finalizers:
+    - kubernetes.io/pvc-protection
+    labels:
+      app.kubernetes.io/part-of: caal
+    name: caal-memory
+    namespace: caal
+    resourceVersion: "149331"
+    uid: 64961b3c-d733-4acb-bc06-317e3a1e2ea5
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 1Gi
+    storageClassName: microk8s-hostpath
+    volumeMode: Filesystem
+    volumeName: pvc-64961b3c-d733-4acb-bc06-317e3a1e2ea5
+  status:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 1Gi
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolumeClaim","metadata":{"annotations":{},"labels":{"app.kubernetes.io/part-of":"caal"},"name":"kokoro-cache","namespace":"caal"},"spec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"5Gi"}}}}
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-provisioner: microk8s.io/hostpath
+      volume.kubernetes.io/selected-node: microk8s
+      volume.kubernetes.io/storage-provisioner: microk8s.io/hostpath
+    creationTimestamp: "2026-03-01T14:59:13Z"
+    finalizers:
+    - kubernetes.io/pvc-protection
+    labels:
+      app.kubernetes.io/part-of: caal
+    name: kokoro-cache
+    namespace: caal
+    resourceVersion: "149303"
+    uid: a2db4c26-bcce-4f47-a58a-717e82a50647
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 5Gi
+    storageClassName: microk8s-hostpath
+    volumeMode: Filesystem
+    volumeName: pvc-a2db4c26-bcce-4f47-a58a-717e82a50647
+  status:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 5Gi
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolumeClaim","metadata":{"annotations":{},"labels":{"app":"n8n","app.kubernetes.io/part-of":"caal"},"name":"n8n-data","namespace":"caal"},"spec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"2Gi"}}}}
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-provisioner: microk8s.io/hostpath
+      volume.kubernetes.io/selected-node: microk8s
+      volume.kubernetes.io/storage-provisioner: microk8s.io/hostpath
+    creationTimestamp: "2026-03-01T15:36:42Z"
+    finalizers:
+    - kubernetes.io/pvc-protection
+    labels:
+      app: n8n
+      app.kubernetes.io/part-of: caal
+    name: n8n-data
+    namespace: caal
+    resourceVersion: "154872"
+    uid: db690b25-4aef-4f6e-b026-feeb7ebcb52e
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 2Gi
+    storageClassName: microk8s-hostpath
+    volumeMode: Filesystem
+    volumeName: pvc-db690b25-4aef-4f6e-b026-feeb7ebcb52e
+  status:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 2Gi
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolumeClaim","metadata":{"annotations":{},"labels":{"app.kubernetes.io/part-of":"caal"},"name":"nginx-certs","namespace":"caal"},"spec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"10Mi"}}}}
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-provisioner: microk8s.io/hostpath
+      volume.kubernetes.io/selected-node: microk8s
+      volume.kubernetes.io/storage-provisioner: microk8s.io/hostpath
+    creationTimestamp: "2026-03-01T14:59:13Z"
+    finalizers:
+    - kubernetes.io/pvc-protection
+    labels:
+      app.kubernetes.io/part-of: caal
+    name: nginx-certs
+    namespace: caal
+    resourceVersion: "149378"
+    uid: 2d415ae5-1b57-49d5-9bd7-00ec9ef5fc96
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 10Mi
+    storageClassName: microk8s-hostpath
+    volumeMode: Filesystem
+    volumeName: pvc-2d415ae5-1b57-49d5-9bd7-00ec9ef5fc96
+  status:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 10Mi
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolumeClaim","metadata":{"annotations":{},"labels":{"app.kubernetes.io/part-of":"caal"},"name":"speaches-cache","namespace":"caal"},"spec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"5Gi"}}}}
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-provisioner: microk8s.io/hostpath
+      volume.kubernetes.io/selected-node: microk8s
+      volume.kubernetes.io/storage-provisioner: microk8s.io/hostpath
+    creationTimestamp: "2026-03-01T14:59:13Z"
+    finalizers:
+    - kubernetes.io/pvc-protection
+    labels:
+      app.kubernetes.io/part-of: caal
+    name: speaches-cache
+    namespace: caal
+    resourceVersion: "149292"
+    uid: bf74acff-d0e8-4988-b1fa-a697b3c445e7
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 5Gi
+    storageClassName: microk8s-hostpath
+    volumeMode: Filesystem
+    volumeName: pvc-bf74acff-d0e8-4988-b1fa-a697b3c445e7
+  status:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 5Gi
+    phase: Bound
+kind: List
+metadata:
+  resourceVersion: ""

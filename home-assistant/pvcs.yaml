@@ -1,0 +1,71 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolumeClaim","metadata":{"annotations":{},"name":"piper-data-pvc","namespace":"home-assistant"},"spec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"2Gi"}},"storageClassName":"microk8s-hostpath"}}
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-provisioner: microk8s.io/hostpath
+      volume.kubernetes.io/selected-node: microk8s
+      volume.kubernetes.io/storage-provisioner: microk8s.io/hostpath
+    creationTimestamp: "2026-03-02T16:43:41Z"
+    finalizers:
+    - kubernetes.io/pvc-protection
+    name: piper-data-pvc
+    namespace: home-assistant
+    resourceVersion: "360091"
+    uid: cd8da411-9928-4535-b0e0-5faf7a559396
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 2Gi
+    storageClassName: microk8s-hostpath
+    volumeMode: Filesystem
+    volumeName: pvc-cd8da411-9928-4535-b0e0-5faf7a559396
+  status:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 2Gi
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolumeClaim","metadata":{"annotations":{},"name":"whisper-data-pvc","namespace":"home-assistant"},"spec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"5Gi"}},"storageClassName":"microk8s-hostpath"}}
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-provisioner: microk8s.io/hostpath
+      volume.kubernetes.io/selected-node: microk8s
+      volume.kubernetes.io/storage-provisioner: microk8s.io/hostpath
+    creationTimestamp: "2026-03-02T16:39:49Z"
+    finalizers:
+    - kubernetes.io/pvc-protection
+    name: whisper-data-pvc
+    namespace: home-assistant
+    resourceVersion: "359488"
+    uid: d4860363-b2f7-4507-8f92-9b0ee6721791
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 5Gi
+    storageClassName: microk8s-hostpath
+    volumeMode: Filesystem
+    volumeName: pvc-d4860363-b2f7-4507-8f92-9b0ee6721791
+  status:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 5Gi
+    phase: Bound
+kind: List
+metadata:
+  resourceVersion: ""

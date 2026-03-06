@@ -1,0 +1,99 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"mosquitto"},"name":"mosquitto","namespace":"iot-stack"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"mosquitto"}},"template":{"metadata":{"labels":{"app":"mosquitto"}},"spec":{"containers":[{"image":"eclipse-mosquitto:2.0.18","name":"mosquitto","ports":[{"containerPort":1883,"name":"mqtt"},{"containerPort":9001,"name":"websocket"}],"resources":{"limits":{"cpu":"200m","memory":"128Mi"},"requests":{"cpu":"100m","memory":"64Mi"}},"volumeMounts":[{"mountPath":"/mosquitto/config","name":"mosquitto-config"},{"mountPath":"/mosquitto/data","name":"mosquitto-data"},{"mountPath":"/mosquitto/log","name":"mosquitto-log"}]}],"volumes":[{"configMap":{"name":"mosquitto-config"},"name":"mosquitto-config"},{"name":"mosquitto-data","persistentVolumeClaim":{"claimName":"mosquitto-data-pvc"}},{"emptyDir":{},"name":"mosquitto-log"}]}}}}
+    creationTimestamp: "2026-03-01T01:57:24Z"
+    generation: 1
+    labels:
+      app: mosquitto
+    name: mosquitto
+    namespace: iot-stack
+    resourceVersion: "42327"
+    uid: df3dea3e-0886-4dd2-9dba-c018d0e82513
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: mosquitto
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: mosquitto
+      spec:
+        containers:
+        - image: eclipse-mosquitto:2.0.18
+          imagePullPolicy: IfNotPresent
+          name: mosquitto
+          ports:
+          - containerPort: 1883
+            name: mqtt
+            protocol: TCP
+          - containerPort: 9001
+            name: websocket
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 200m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 64Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /mosquitto/config
+            name: mosquitto-config
+          - mountPath: /mosquitto/data
+            name: mosquitto-data
+          - mountPath: /mosquitto/log
+            name: mosquitto-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            name: mosquitto-config
+          name: mosquitto-config
+        - name: mosquitto-data
+          persistentVolumeClaim:
+            claimName: mosquitto-data-pvc
+        - emptyDir: {}
+          name: mosquitto-log
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-03-01T01:57:38Z"
+      lastUpdateTime: "2026-03-01T01:57:38Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2026-03-01T01:57:24Z"
+      lastUpdateTime: "2026-03-01T01:57:38Z"
+      message: ReplicaSet "mosquitto-5c795db9cb" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+kind: List
+metadata:
+  resourceVersion: ""

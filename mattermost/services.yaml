@@ -1,0 +1,78 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"mattermost-postgresql","namespace":"mattermost"},"spec":{"ports":[{"port":5432,"targetPort":5432}],"selector":{"app":"mattermost-postgresql"}}}
+    creationTimestamp: "2026-02-28T21:17:49Z"
+    name: mattermost-postgresql
+    namespace: mattermost
+    resourceVersion: "3721"
+    uid: 9db21e56-2fb9-44d8-b9ba-a06601ed3d51
+  spec:
+    clusterIP: 10.152.183.51
+    clusterIPs:
+    - 10.152.183.51
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 5432
+      protocol: TCP
+      targetPort: 5432
+    selector:
+      app: mattermost-postgresql
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: mattermost
+      meta.helm.sh/release-namespace: mattermost
+      metallb.io/ip-allocated-from-pool: default-addresspool
+    creationTimestamp: "2026-02-28T21:24:38Z"
+    labels:
+      app.kubernetes.io/instance: mattermost
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: mattermost-team-edition
+      helm.sh/chart: mattermost-team-edition-6.6.93
+    name: mattermost-team-edition
+    namespace: mattermost
+    resourceVersion: "5000"
+    uid: e9e8a669-5c1e-4acd-aa89-d81fe14ea7f1
+  spec:
+    allocateLoadBalancerNodePorts: true
+    clusterIP: 10.152.183.71
+    clusterIPs:
+    - 10.152.183.71
+    externalTrafficPolicy: Cluster
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: mattermost-team-edition
+      nodePort: 31608
+      port: 8065
+      protocol: TCP
+      targetPort: http
+    selector:
+      app.kubernetes.io/instance: mattermost
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: mattermost-team-edition
+    sessionAffinity: None
+    type: LoadBalancer
+  status:
+    loadBalancer:
+      ingress:
+      - ip: REDACTED
+        ipMode: VIP
+kind: List
+metadata:
+  resourceVersion: ""

@@ -1,0 +1,63 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  data:
+    ca.crt: |
+      -----BEGIN CERTIFICATE-----
+      MIIDDzCCAfegAwIBAgIUDWqnWTC2+iwjp73XC4TfqckyD1owDQYJKoZIhvcNAQEL
+      BQAwFzEVMBMGA1UEAwwMMTAuMTUyLjE4My4xMB4XDTI2MDIyODIwNTg1NFoXDTM2
+      MDIyNjIwNTg1NFowFzEVMBMGA1UEAwwMMTAuMTUyLjE4My4xMIIBIjANBgkqhkiG
+      9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsguyZ/W7doobVoa8svJ3sdHVPL8OGJ9cmSo8
+      jac/zb0DV8A/MbtqWGGKEscEYwao96E9JGyDDFzfVnwAkwaf1kv4gASijBUv9iey
+      dJ8onro7WVYvf89o/4NZYjyp81/elmDiOzJcnoUH3E+9L4mIOoBPBIqvEoNzhUYT
+      4AFZWoFfKj5iEImfbtThX2w1S5uAqdw7H+t9BNBqn8BImKn5IGb4qS4bOr/RSjnC
+      hMeAWmQ5QHxC1P+ma8RwyvXMyrRExU2YYSirtBmNcFoIB0/VDsmYHPe1kPZJl7o+
+      qrvNC/PZmFBBeNJ5iNeUsD23YiYEoVZCsuQftoVfM5DRSaei7QIDAQABo1MwUTAd
+      BgNVHQ4EFgQUy+ekMJhdnbbRBRPVpiNM9f0wsIcwHwYDVR0jBBgwFoAUy+ekMJhd
+      nbbRBRPVpiNM9f0wsIcwDwYDVR0TAQH/BAUwAwEB/zANBgkqhkiG9w0BAQsFAAOC
+      AQEAqiFJnbHl8gAKgQdZ4XEMQd6qGkdJdP/wmTAePCRS3X4P6v3yoKQf+Mc2hkCz
+      Pi596OYav1DkDBWLhkzgZf5lANVVkPbdhC2Nvez43/BwiwcfdvOZmcxlZrwGmMaZ
+      chQd7bWzIAjoiZf9TO8ndQWJBD9RWUrX6PjlbFQNXy0i9aDfElZOoBR/8Hf6PJLb
+      9VoasB8ijVuQVLRO4mySHuKtJuGvlJThUfiAa+rBliHrvysA5d6+oGuPa1s6nuzH
+      td2VKEHo5c+uBcc1/FwWDr8sHRYVqgDh4416Lj4Ia4pCr/G1rtvk6Ntf4SQYk1AD
+      RF4vUvpXBFvvNdoUiLD89HBnFA==
+      -----END CERTIFICATE-----
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubernetes.io/description: Contains a CA bundle that can be used to verify the
+        kube-apiserver when using internal endpoints such as the internal service
+        IP or kubernetes.default.svc. No other usage is guaranteed across distributions
+        of Kubernetes clusters.
+    creationTimestamp: "2026-02-28T21:01:07Z"
+    name: kube-root-ca.crt
+    namespace: mattermost
+    resourceVersion: "840"
+    uid: 8c95c0c5-e6e5-4e38-8994-ac95d06472dd
+- apiVersion: v1
+  data:
+    run.sh: |-
+      #!/usr/bin/env bats
+      @test "Testing Mattermost is accessible" {
+        url="http://mattermost-team-edition.mattermost.svc.cluster.local:8065"
+        code=$(wget --server-response --spider --timeout 10 --tries 1 ${url} 2>&1 | awk '/^  HTTP/{print $2}')
+        [ "$code" == "200" ]
+      }
+  kind: ConfigMap
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: mattermost
+      meta.helm.sh/release-namespace: mattermost
+    creationTimestamp: "2026-02-28T21:24:37Z"
+    labels:
+      app.kubernetes.io/instance: mattermost
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: mattermost-team-edition
+      helm.sh/chart: mattermost-team-edition-6.6.93
+    name: mattermost-mattermost-team-edition-tests
+    namespace: mattermost
+    resourceVersion: "4987"
+    uid: cfa41541-c972-44dc-a4cf-2c9634469b89
+kind: List
+metadata:
+  resourceVersion: ""

@@ -1,0 +1,298 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "3"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"mqtt-discovery-bridge","namespace":"home-assistant"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"mqtt-discovery-bridge"}},"template":{"metadata":{"labels":{"app":"mqtt-discovery-bridge"}},"spec":{"containers":[{"args":["pip install --no-cache-dir paho-mqtt \u0026\u0026 python /app/bridge.py"],"command":["sh","-c"],"env":[{"name":"MQTT_BROKER","value":"mosquitto-service.iot-stack.svc.cluster.local"},{"name":"MQTT_PORT","value":"1883"},{"name":"SRC_TOPIC","value":"sensors"},{"name":"DISC_PREFIX","value":"homeassistant"},{"name":"STATE_ROOT","value":"home"}],"image":"python:3.12-alpine","name":"bridge","volumeMounts":[{"mountPath":"/app/bridge.py","name":"script","subPath":"bridge.py"}]}],"volumes":[{"configMap":{"name":"mqtt-discovery-bridge-script"},"name":"script"}]}}}}
+    creationTimestamp: "2026-03-01T01:57:34Z"
+    generation: 3
+    name: mqtt-discovery-bridge
+    namespace: home-assistant
+    resourceVersion: "591036"
+    uid: 9a69e84c-6fe3-407d-a0d9-c51d19fcaa0a
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: mqtt-discovery-bridge
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2026-03-02T08:49:48-07:00"
+        creationTimestamp: null
+        labels:
+          app: mqtt-discovery-bridge
+      spec:
+        containers:
+        - args:
+          - pip install --no-cache-dir paho-mqtt && python /app/bridge.py
+          command:
+          - sh
+          - -c
+          env:
+          - name: MQTT_BROKER
+            value: mosquitto-service.iot-stack.svc.cluster.local
+          - name: MQTT_PORT
+            value: "1883"
+          - name: SRC_TOPIC
+            value: sensors
+          - name: DISC_PREFIX
+            value: homeassistant
+          - name: STATE_ROOT
+            value: home
+          image: python:3.12-alpine
+          imagePullPolicy: IfNotPresent
+          name: bridge
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /app/bridge.py
+            name: script
+            subPath: bridge.py
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            name: mqtt-discovery-bridge-script
+          name: script
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-03-01T01:57:34Z"
+      lastUpdateTime: "2026-03-02T15:49:50Z"
+      message: ReplicaSet "mqtt-discovery-bridge-589db4bf97" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-03-03T20:47:37Z"
+      lastUpdateTime: "2026-03-03T20:47:37Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 3
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "2"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"piper"},"name":"piper","namespace":"home-assistant"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"piper"}},"template":{"metadata":{"labels":{"app":"piper"}},"spec":{"containers":[{"args":["--voice","en_US-lessac-low"],"image":"rhasspy/wyoming-piper:latest","livenessProbe":{"initialDelaySeconds":30,"periodSeconds":30,"tcpSocket":{"port":10200}},"name":"piper","ports":[{"containerPort":10200,"name":"wyoming","protocol":"TCP"}],"readinessProbe":{"failureThreshold":6,"initialDelaySeconds":15,"periodSeconds":10,"tcpSocket":{"port":10200}},"resources":{"limits":{"cpu":"4000m","memory":"1Gi"},"requests":{"cpu":"500m","memory":"256Mi"}},"volumeMounts":[{"mountPath":"/data","name":"piper-data"}]}],"volumes":[{"name":"piper-data","persistentVolumeClaim":{"claimName":"piper-data-pvc"}}]}}}}
+    creationTimestamp: "2026-03-02T16:43:41Z"
+    generation: 2
+    labels:
+      app: piper
+    name: piper
+    namespace: home-assistant
+    resourceVersion: "361681"
+    uid: abe70f63-5e67-4122-8397-4da398c93de9
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: piper
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: piper
+      spec:
+        containers:
+        - args:
+          - --voice
+          - en_US-lessac-low
+          image: rhasspy/wyoming-piper:latest
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            successThreshold: 1
+            tcpSocket:
+              port: 10200
+            timeoutSeconds: 1
+          name: piper
+          ports:
+          - containerPort: 10200
+            name: wyoming
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 6
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 10200
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: "4"
+              memory: 1Gi
+            requests:
+              cpu: 500m
+              memory: 256Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /data
+            name: piper-data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: piper-data
+          persistentVolumeClaim:
+            claimName: piper-data-pvc
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-03-02T16:54:23Z"
+      lastUpdateTime: "2026-03-02T16:54:23Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2026-03-02T16:43:41Z"
+      lastUpdateTime: "2026-03-02T16:54:23Z"
+      message: ReplicaSet "piper-644974fb6f" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"whisper"},"name":"whisper","namespace":"home-assistant"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"whisper"}},"template":{"metadata":{"labels":{"app":"whisper"}},"spec":{"containers":[{"args":["--model","small-int8","--language","en","--beam-size","1"],"image":"rhasspy/wyoming-whisper:latest","livenessProbe":{"initialDelaySeconds":60,"periodSeconds":30,"tcpSocket":{"port":10300}},"name":"whisper","ports":[{"containerPort":10300,"name":"wyoming","protocol":"TCP"}],"readinessProbe":{"failureThreshold":6,"initialDelaySeconds":30,"periodSeconds":10,"tcpSocket":{"port":10300}},"resources":{"limits":{"cpu":"4000m","memory":"3Gi"},"requests":{"cpu":"500m","memory":"512Mi"}},"volumeMounts":[{"mountPath":"/data","name":"whisper-data"}]}],"volumes":[{"name":"whisper-data","persistentVolumeClaim":{"claimName":"whisper-data-pvc"}}]}}}}
+    creationTimestamp: "2026-03-02T16:39:49Z"
+    generation: 1
+    labels:
+      app: whisper
+    name: whisper
+    namespace: home-assistant
+    resourceVersion: "591044"
+    uid: 9d1b2972-6c3c-46d1-948b-6f738795285a
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: whisper
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: whisper
+      spec:
+        containers:
+        - args:
+          - --model
+          - small-int8
+          - --language
+          - en
+          - --beam-size
+          - "1"
+          image: rhasspy/wyoming-whisper:latest
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            successThreshold: 1
+            tcpSocket:
+              port: 10300
+            timeoutSeconds: 1
+          name: whisper
+          ports:
+          - containerPort: 10300
+            name: wyoming
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 6
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 10300
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: "4"
+              memory: 3Gi
+            requests:
+              cpu: 500m
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /data
+            name: whisper-data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: whisper-data
+          persistentVolumeClaim:
+            claimName: whisper-data-pvc
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-03-02T16:39:49Z"
+      lastUpdateTime: "2026-03-02T16:41:20Z"
+      message: ReplicaSet "whisper-68888944c" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-03-03T20:47:37Z"
+      lastUpdateTime: "2026-03-03T20:47:37Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+kind: List
+metadata:
+  resourceVersion: ""

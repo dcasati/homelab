@@ -1,0 +1,149 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"piper"},"name":"piper","namespace":"home-assistant"},"spec":{"ports":[{"name":"wyoming","port":10200,"targetPort":10200}],"selector":{"app":"piper"},"type":"ClusterIP"}}
+    creationTimestamp: "2026-03-02T16:43:41Z"
+    labels:
+      app: piper
+    name: piper
+    namespace: home-assistant
+    resourceVersion: "360038"
+    uid: 7dd2d026-007d-4faa-a841-256e3c82fa71
+  spec:
+    clusterIP: 10.152.183.29
+    clusterIPs:
+    - 10.152.183.29
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: wyoming
+      port: 10200
+      protocol: TCP
+      targetPort: 10200
+    selector:
+      app: piper
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{"metallb.universe.tf/loadBalancerIPs":"REDACTED"},"labels":{"app":"piper"},"name":"piper-external","namespace":"home-assistant"},"spec":{"ports":[{"name":"wyoming","port":10200,"targetPort":10200}],"selector":{"app":"piper"},"type":"LoadBalancer"}}
+      metallb.io/ip-allocated-from-pool: default-addresspool
+      metallb.universe.tf/loadBalancerIPs: REDACTED
+    creationTimestamp: "2026-03-02T16:43:41Z"
+    labels:
+      app: piper
+    name: piper-external
+    namespace: home-assistant
+    resourceVersion: "360061"
+    uid: 3c248a16-d564-4370-89ef-c6210be3a3c8
+  spec:
+    allocateLoadBalancerNodePorts: true
+    clusterIP: 10.152.183.197
+    clusterIPs:
+    - 10.152.183.197
+    externalTrafficPolicy: Cluster
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: wyoming
+      nodePort: 32519
+      port: 10200
+      protocol: TCP
+      targetPort: 10200
+    selector:
+      app: piper
+    sessionAffinity: None
+    type: LoadBalancer
+  status:
+    loadBalancer:
+      ingress:
+      - ip: REDACTED
+        ipMode: VIP
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"whisper"},"name":"whisper","namespace":"home-assistant"},"spec":{"ports":[{"name":"wyoming","port":10300,"targetPort":10300}],"selector":{"app":"whisper"},"type":"ClusterIP"}}
+    creationTimestamp: "2026-03-02T16:39:49Z"
+    labels:
+      app: whisper
+    name: whisper
+    namespace: home-assistant
+    resourceVersion: "359428"
+    uid: a574eef8-ea90-4d73-a3af-ce9bcc604a3a
+  spec:
+    clusterIP: 10.152.183.113
+    clusterIPs:
+    - 10.152.183.113
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: wyoming
+      port: 10300
+      protocol: TCP
+      targetPort: 10300
+    selector:
+      app: whisper
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{"metallb.universe.tf/loadBalancerIPs":"REDACTED"},"labels":{"app":"whisper"},"name":"whisper-external","namespace":"home-assistant"},"spec":{"ports":[{"name":"wyoming","port":10300,"targetPort":10300}],"selector":{"app":"whisper"},"type":"LoadBalancer"}}
+      metallb.io/ip-allocated-from-pool: default-addresspool
+      metallb.universe.tf/loadBalancerIPs: REDACTED
+    creationTimestamp: "2026-03-02T16:39:49Z"
+    labels:
+      app: whisper
+    name: whisper-external
+    namespace: home-assistant
+    resourceVersion: "359451"
+    uid: ad3cea3e-095c-46b9-a730-5e1e017ebb32
+  spec:
+    allocateLoadBalancerNodePorts: true
+    clusterIP: 10.152.183.171
+    clusterIPs:
+    - 10.152.183.171
+    externalTrafficPolicy: Cluster
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: wyoming
+      nodePort: 32306
+      port: 10300
+      protocol: TCP
+      targetPort: 10300
+    selector:
+      app: whisper
+    sessionAffinity: None
+    type: LoadBalancer
+  status:
+    loadBalancer:
+      ingress:
+      - ip: REDACTED
+        ipMode: VIP
+kind: List
+metadata:
+  resourceVersion: ""

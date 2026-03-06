@@ -1,0 +1,174 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  data:
+    mcp_servers.default.json: |
+      {
+        "servers": []
+      }
+    settings.default.json: |
+      {
+        "first_launch_completed": false,
+        "agent_name": "Cal",
+        "tts_voice": "am_puck",
+        "prompt": "default",
+        "temperature": 0.15,
+        "model": "ministral-3:8b",
+        "num_ctx": 8192,
+        "max_turns": 20,
+        "tool_cache_size": 3,
+        "wake_word_enabled": true,
+        "wake_word_model": "models/hey_cal.onnx",
+        "wake_word_threshold": 0.5,
+        "wake_word_timeout": 3.0
+      }
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","data":{"mcp_servers.default.json":"{\n  \"servers\": []\n}\n","settings.default.json":"{\n  \"first_launch_completed\": false,\n  \"agent_name\": \"Cal\",\n  \"tts_voice\": \"am_puck\",\n  \"prompt\": \"default\",\n  \"temperature\": 0.15,\n  \"model\": \"ministral-3:8b\",\n  \"num_ctx\": 8192,\n  \"max_turns\": 20,\n  \"tool_cache_size\": 3,\n  \"wake_word_enabled\": true,\n  \"wake_word_model\": \"models/hey_cal.onnx\",\n  \"wake_word_threshold\": 0.5,\n  \"wake_word_timeout\": 3.0\n}\n"},"kind":"ConfigMap","metadata":{"annotations":{},"labels":{"app.kubernetes.io/part-of":"caal"},"name":"agent-defaults","namespace":"caal"}}
+    creationTimestamp: "2026-03-01T14:59:13Z"
+    labels:
+      app.kubernetes.io/part-of: caal
+    name: agent-defaults
+    namespace: caal
+    resourceVersion: "149054"
+    uid: 17a07060-14af-48dd-8ed2-39734345ee9c
+- apiVersion: v1
+  data:
+    ca.crt: |
+      -----BEGIN CERTIFICATE-----
+      MIIDDzCCAfegAwIBAgIUDWqnWTC2+iwjp73XC4TfqckyD1owDQYJKoZIhvcNAQEL
+      BQAwFzEVMBMGA1UEAwwMMTAuMTUyLjE4My4xMB4XDTI2MDIyODIwNTg1NFoXDTM2
+      MDIyNjIwNTg1NFowFzEVMBMGA1UEAwwMMTAuMTUyLjE4My4xMIIBIjANBgkqhkiG
+      9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsguyZ/W7doobVoa8svJ3sdHVPL8OGJ9cmSo8
+      jac/zb0DV8A/MbtqWGGKEscEYwao96E9JGyDDFzfVnwAkwaf1kv4gASijBUv9iey
+      dJ8onro7WVYvf89o/4NZYjyp81/elmDiOzJcnoUH3E+9L4mIOoBPBIqvEoNzhUYT
+      4AFZWoFfKj5iEImfbtThX2w1S5uAqdw7H+t9BNBqn8BImKn5IGb4qS4bOr/RSjnC
+      hMeAWmQ5QHxC1P+ma8RwyvXMyrRExU2YYSirtBmNcFoIB0/VDsmYHPe1kPZJl7o+
+      qrvNC/PZmFBBeNJ5iNeUsD23YiYEoVZCsuQftoVfM5DRSaei7QIDAQABo1MwUTAd
+      BgNVHQ4EFgQUy+ekMJhdnbbRBRPVpiNM9f0wsIcwHwYDVR0jBBgwFoAUy+ekMJhd
+      nbbRBRPVpiNM9f0wsIcwDwYDVR0TAQH/BAUwAwEB/zANBgkqhkiG9w0BAQsFAAOC
+      AQEAqiFJnbHl8gAKgQdZ4XEMQd6qGkdJdP/wmTAePCRS3X4P6v3yoKQf+Mc2hkCz
+      Pi596OYav1DkDBWLhkzgZf5lANVVkPbdhC2Nvez43/BwiwcfdvOZmcxlZrwGmMaZ
+      chQd7bWzIAjoiZf9TO8ndQWJBD9RWUrX6PjlbFQNXy0i9aDfElZOoBR/8Hf6PJLb
+      9VoasB8ijVuQVLRO4mySHuKtJuGvlJThUfiAa+rBliHrvysA5d6+oGuPa1s6nuzH
+      td2VKEHo5c+uBcc1/FwWDr8sHRYVqgDh4416Lj4Ia4pCr/G1rtvk6Ntf4SQYk1AD
+      RF4vUvpXBFvvNdoUiLD89HBnFA==
+      -----END CERTIFICATE-----
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubernetes.io/description: Contains a CA bundle that can be used to verify the
+        kube-apiserver when using internal endpoints such as the internal service
+        IP or kubernetes.default.svc. No other usage is guaranteed across distributions
+        of Kubernetes clusters.
+    creationTimestamp: "2026-03-01T14:59:13Z"
+    name: kube-root-ca.crt
+    namespace: caal
+    resourceVersion: "149056"
+    uid: 81952a61-f007-48c3-b03b-69fddc52ebf3
+- apiVersion: v1
+  data:
+    livekit.yaml: |
+      port: 7880
+      log_level: info
+      keys:
+        CHANGE_ME_KEY: CHANGE_ME_SECRET
+
+      rtc:
+        use_external_ip: false
+        tcp_port: 7881
+        port_range_start: 51000
+        port_range_end: 51100
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","data":{"livekit.yaml":"port: 7880\nlog_level: info\nkeys:\n  CHANGE_ME_KEY: CHANGE_ME_SECRET\n\nrtc:\n  use_external_ip: false\n  tcp_port: 7881\n  port_range_start: 51000\n  port_range_end: 51100\n"},"kind":"ConfigMap","metadata":{"annotations":{},"labels":{"app.kubernetes.io/part-of":"caal"},"name":"livekit-config","namespace":"caal"}}
+    creationTimestamp: "2026-03-01T14:59:13Z"
+    labels:
+      app.kubernetes.io/part-of: caal
+    name: livekit-config
+    namespace: caal
+    resourceVersion: "149051"
+    uid: c1e6909f-d2ca-44f9-9f45-d624c455c4ee
+- apiVersion: v1
+  data:
+    generate-certs.sh: |
+      #!/bin/sh
+      set -e
+      CERT_DIR="/etc/nginx/certs"
+      if [ ! -f "$CERT_DIR/server.crt" ]; then
+        echo "Generating self-signed certificate..."
+        mkdir -p "$CERT_DIR"
+        openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+          -keyout "$CERT_DIR/server.key" \
+          -out "$CERT_DIR/server.crt" \
+          -subj "/CN=caal.local" \
+          -addext "subjectAltName=DNS:localhost,IP:REDACTED,IP:REDACTED,IP:127.0.0.1" 2>/dev/null
+        echo "Self-signed certificate generated"
+      else
+        echo "Using existing certificate"
+      fi
+    nginx.conf: |
+      events {
+          worker_connections 1024;
+      }
+
+      http {
+          # HTTPS - Frontend
+          server {
+              listen 3443 ssl;
+              server_name _;
+
+              ssl_certificate /etc/nginx/certs/server.crt;
+              ssl_certificate_key /etc/nginx/certs/server.key;
+              ssl_protocols TLSv1.2 TLSv1.3;
+
+              location / {
+                  proxy_pass http://frontend.caal.svc.cluster.local:3000;
+                  proxy_http_version 1.1;
+                  proxy_set_header Upgrade $http_upgrade;
+                  proxy_set_header Connection "upgrade";
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Real-IP $remote_addr;
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto $scheme;
+              }
+          }
+
+          # HTTPS - LiveKit WebSocket (port 7443)
+          server {
+              listen 7443 ssl;
+              server_name _;
+
+              ssl_certificate /etc/nginx/certs/server.crt;
+              ssl_certificate_key /etc/nginx/certs/server.key;
+              ssl_protocols TLSv1.2 TLSv1.3;
+
+              location / {
+                  proxy_pass http://livekit.caal.svc.cluster.local:7880;
+                  proxy_http_version 1.1;
+                  proxy_set_header Upgrade $http_upgrade;
+                  proxy_set_header Connection "upgrade";
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Real-IP $remote_addr;
+              }
+          }
+      }
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","data":{"generate-certs.sh":"#!/bin/sh\nset -e\nCERT_DIR=\"/etc/nginx/certs\"\nif [ ! -f \"$CERT_DIR/server.crt\" ]; then\n  echo \"Generating self-signed certificate...\"\n  mkdir -p \"$CERT_DIR\"\n  openssl req -x509 -nodes -days 365 -newkey rsa:2048 \\\n    -keyout \"$CERT_DIR/server.key\" \\\n    -out \"$CERT_DIR/server.crt\" \\\n    -subj \"/CN=caal.local\" \\\n    -addext \"subjectAltName=DNS:localhost,IP:REDACTED,IP:REDACTED,IP:127.0.0.1\" 2\u003e/dev/null\n  echo \"Self-signed certificate generated\"\nelse\n  echo \"Using existing certificate\"\nfi\n","nginx.conf":"events {\n    worker_connections 1024;\n}\n\nhttp {\n    # HTTPS - Frontend\n    server {\n        listen 3443 ssl;\n        server_name _;\n\n        ssl_certificate /etc/nginx/certs/server.crt;\n        ssl_certificate_key /etc/nginx/certs/server.key;\n        ssl_protocols TLSv1.2 TLSv1.3;\n\n        location / {\n            proxy_pass http://frontend.caal.svc.cluster.local:3000;\n            proxy_http_version 1.1;\n            proxy_set_header Upgrade $http_upgrade;\n            proxy_set_header Connection \"upgrade\";\n            proxy_set_header Host $host;\n            proxy_set_header X-Real-IP $remote_addr;\n            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n            proxy_set_header X-Forwarded-Proto $scheme;\n        }\n    }\n\n    # HTTPS - LiveKit WebSocket (port 7443)\n    server {\n        listen 7443 ssl;\n        server_name _;\n\n        ssl_certificate /etc/nginx/certs/server.crt;\n        ssl_certificate_key /etc/nginx/certs/server.key;\n        ssl_protocols TLSv1.2 TLSv1.3;\n\n        location / {\n            proxy_pass http://livekit.caal.svc.cluster.local:7880;\n            proxy_http_version 1.1;\n            proxy_set_header Upgrade $http_upgrade;\n            proxy_set_header Connection \"upgrade\";\n            proxy_set_header Host $host;\n            proxy_set_header X-Real-IP $remote_addr;\n        }\n    }\n}\n"},"kind":"ConfigMap","metadata":{"annotations":{},"labels":{"app.kubernetes.io/part-of":"caal"},"name":"nginx-config","namespace":"caal"}}
+    creationTimestamp: "2026-03-01T14:59:13Z"
+    labels:
+      app.kubernetes.io/part-of: caal
+    name: nginx-config
+    namespace: caal
+    resourceVersion: "149053"
+    uid: 54add463-6cde-47e4-bbe3-5c6abd2d423f
+kind: List
+metadata:
+  resourceVersion: ""

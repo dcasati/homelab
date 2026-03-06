@@ -1,0 +1,114 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: mattermost
+      meta.helm.sh/release-namespace: mattermost
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-provisioner: microk8s.io/hostpath
+      volume.kubernetes.io/selected-node: microk8s
+      volume.kubernetes.io/storage-provisioner: microk8s.io/hostpath
+    creationTimestamp: "2026-02-28T21:24:38Z"
+    finalizers:
+    - kubernetes.io/pvc-protection
+    labels:
+      app.kubernetes.io/instance: mattermost
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: mattermost-team-edition
+      helm.sh/chart: mattermost-team-edition-6.6.93
+    name: mattermost-mattermost-team-edition
+    namespace: mattermost
+    resourceVersion: "5075"
+    uid: 6f4bcd74-adfc-4444-ae72-0e326edf893a
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 10Gi
+    storageClassName: microk8s-hostpath
+    volumeMode: Filesystem
+    volumeName: pvc-6f4bcd74-adfc-4444-ae72-0e326edf893a
+  status:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 10Gi
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: mattermost
+      meta.helm.sh/release-namespace: mattermost
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-provisioner: microk8s.io/hostpath
+      volume.kubernetes.io/selected-node: microk8s
+      volume.kubernetes.io/storage-provisioner: microk8s.io/hostpath
+    creationTimestamp: "2026-02-28T21:24:38Z"
+    finalizers:
+    - kubernetes.io/pvc-protection
+    labels:
+      app.kubernetes.io/instance: mattermost
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: mattermost-team-edition
+      helm.sh/chart: mattermost-team-edition-6.6.93
+    name: mattermost-mattermost-team-edition-plugins
+    namespace: mattermost
+    resourceVersion: "5072"
+    uid: 760ece5e-b276-4c60-a22d-c39d737ac8ec
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 1Gi
+    storageClassName: microk8s-hostpath
+    volumeMode: Filesystem
+    volumeName: pvc-760ece5e-b276-4c60-a22d-c39d737ac8ec
+  status:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 1Gi
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolumeClaim","metadata":{"annotations":{},"name":"mattermost-postgresql-data","namespace":"mattermost"},"spec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"10Gi"}},"storageClassName":"microk8s-hostpath"}}
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-provisioner: microk8s.io/hostpath
+      volume.kubernetes.io/selected-node: microk8s
+      volume.kubernetes.io/storage-provisioner: microk8s.io/hostpath
+    creationTimestamp: "2026-02-28T21:17:49Z"
+    finalizers:
+    - kubernetes.io/pvc-protection
+    name: mattermost-postgresql-data
+    namespace: mattermost
+    resourceVersion: "3774"
+    uid: 7774e506-7481-4031-b268-7f7a360ebd62
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 10Gi
+    storageClassName: microk8s-hostpath
+    volumeMode: Filesystem
+    volumeName: pvc-7774e506-7481-4031-b268-7f7a360ebd62
+  status:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 10Gi
+    phase: Bound
+kind: List
+metadata:
+  resourceVersion: ""

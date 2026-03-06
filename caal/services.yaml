@@ -1,0 +1,366 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"agent","app.kubernetes.io/part-of":"caal"},"name":"agent","namespace":"caal"},"spec":{"ports":[{"name":"webhook","port":8889,"targetPort":8889}],"selector":{"app":"agent"},"type":"ClusterIP"}}
+    creationTimestamp: "2026-03-01T14:59:14Z"
+    labels:
+      app: agent
+      app.kubernetes.io/part-of: caal
+    name: agent
+    namespace: caal
+    resourceVersion: "149151"
+    uid: 523f1df4-104a-4647-a64f-8c54f9261c26
+  spec:
+    clusterIP: 10.152.183.204
+    clusterIPs:
+    - 10.152.183.204
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: webhook
+      port: 8889
+      protocol: TCP
+      targetPort: 8889
+    selector:
+      app: agent
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"frontend","app.kubernetes.io/part-of":"caal"},"name":"frontend","namespace":"caal"},"spec":{"ports":[{"name":"http","port":3000,"targetPort":3000}],"selector":{"app":"frontend"},"type":"ClusterIP"}}
+    creationTimestamp: "2026-03-01T14:59:14Z"
+    labels:
+      app: frontend
+      app.kubernetes.io/part-of: caal
+    name: frontend
+    namespace: caal
+    resourceVersion: "149186"
+    uid: a63ccbd4-a39b-42ba-89ce-3b08f149d222
+  spec:
+    clusterIP: 10.152.183.252
+    clusterIPs:
+    - 10.152.183.252
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      port: 3000
+      protocol: TCP
+      targetPort: 3000
+    selector:
+      app: frontend
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"kokoro","app.kubernetes.io/part-of":"caal"},"name":"kokoro","namespace":"caal"},"spec":{"ports":[{"name":"http","port":8880,"targetPort":8880}],"selector":{"app":"kokoro"},"type":"ClusterIP"}}
+    creationTimestamp: "2026-03-01T14:59:14Z"
+    labels:
+      app: kokoro
+      app.kubernetes.io/part-of: caal
+    name: kokoro
+    namespace: caal
+    resourceVersion: "149128"
+    uid: 1f052166-e9a1-4264-b8af-8bb88080d75f
+  spec:
+    clusterIP: 10.152.183.92
+    clusterIPs:
+    - 10.152.183.92
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      port: 8880
+      protocol: TCP
+      targetPort: 8880
+    selector:
+      app: kokoro
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"livekit","app.kubernetes.io/part-of":"caal"},"name":"livekit","namespace":"caal"},"spec":{"ports":[{"name":"ws","port":7880,"protocol":"TCP","targetPort":7880},{"name":"rtc-tcp","port":7881,"protocol":"TCP","targetPort":7881}],"selector":{"app":"livekit"},"type":"ClusterIP"}}
+    creationTimestamp: "2026-03-01T14:59:13Z"
+    labels:
+      app: livekit
+      app.kubernetes.io/part-of: caal
+    name: livekit
+    namespace: caal
+    resourceVersion: "149074"
+    uid: 3ad7f37e-ceb0-472d-aa89-54a1dcfbdddb
+  spec:
+    clusterIP: 10.152.183.53
+    clusterIPs:
+    - 10.152.183.53
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: ws
+      port: 7880
+      protocol: TCP
+      targetPort: 7880
+    - name: rtc-tcp
+      port: 7881
+      protocol: TCP
+      targetPort: 7881
+    selector:
+      app: livekit
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"n8n","app.kubernetes.io/part-of":"caal"},"name":"n8n","namespace":"caal"},"spec":{"ports":[{"name":"http","port":5678,"targetPort":5678}],"selector":{"app":"n8n"},"type":"ClusterIP"}}
+    creationTimestamp: "2026-03-01T15:36:42Z"
+    labels:
+      app: n8n
+      app.kubernetes.io/part-of: caal
+    name: n8n
+    namespace: caal
+    resourceVersion: "154809"
+    uid: c6ecb7f7-bed0-4955-bb71-198681ef226e
+  spec:
+    clusterIP: 10.152.183.20
+    clusterIPs:
+    - 10.152.183.20
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      port: 5678
+      protocol: TCP
+      targetPort: 5678
+    selector:
+      app: n8n
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{"metallb.universe.tf/loadBalancerIPs":"REDACTED"},"labels":{"app":"n8n","app.kubernetes.io/part-of":"caal"},"name":"n8n-external","namespace":"caal"},"spec":{"ports":[{"name":"http","port":5678,"targetPort":5678}],"selector":{"app":"n8n"},"type":"LoadBalancer"}}
+      metallb.io/ip-allocated-from-pool: default-addresspool
+      metallb.universe.tf/loadBalancerIPs: REDACTED
+    creationTimestamp: "2026-03-01T15:36:42Z"
+    labels:
+      app: n8n
+      app.kubernetes.io/part-of: caal
+    name: n8n-external
+    namespace: caal
+    resourceVersion: "154833"
+    uid: 129f0368-2e4f-41d1-a5da-18924990d01f
+  spec:
+    allocateLoadBalancerNodePorts: true
+    clusterIP: 10.152.183.117
+    clusterIPs:
+    - 10.152.183.117
+    externalTrafficPolicy: Cluster
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      nodePort: 31551
+      port: 5678
+      protocol: TCP
+      targetPort: 5678
+    selector:
+      app: n8n
+    sessionAffinity: None
+    type: LoadBalancer
+  status:
+    loadBalancer:
+      ingress:
+      - ip: REDACTED
+        ipMode: VIP
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{"metallb.universe.tf/loadBalancerIPs":"REDACTED"},"labels":{"app":"nginx","app.kubernetes.io/part-of":"caal"},"name":"nginx","namespace":"caal"},"spec":{"ports":[{"name":"https-frontend","port":3443,"protocol":"TCP","targetPort":3443},{"name":"https-livekit","port":7443,"protocol":"TCP","targetPort":7443}],"selector":{"app":"nginx"},"type":"LoadBalancer"}}
+      metallb.io/ip-allocated-from-pool: default-addresspool
+      metallb.universe.tf/loadBalancerIPs: REDACTED
+    creationTimestamp: "2026-03-01T14:59:15Z"
+    labels:
+      app: nginx
+      app.kubernetes.io/part-of: caal
+    name: nginx
+    namespace: caal
+    resourceVersion: "149222"
+    uid: 957fd653-cd49-46eb-96ed-2f06ca285b9d
+  spec:
+    allocateLoadBalancerNodePorts: true
+    clusterIP: 10.152.183.161
+    clusterIPs:
+    - 10.152.183.161
+    externalTrafficPolicy: Cluster
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: https-frontend
+      nodePort: 31587
+      port: 3443
+      protocol: TCP
+      targetPort: 3443
+    - name: https-livekit
+      nodePort: 31580
+      port: 7443
+      protocol: TCP
+      targetPort: 7443
+    selector:
+      app: nginx
+    sessionAffinity: None
+    type: LoadBalancer
+  status:
+    loadBalancer:
+      ingress:
+      - ip: REDACTED
+        ipMode: VIP
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"ollama","app.kubernetes.io/part-of":"caal"},"name":"ollama","namespace":"caal"},"spec":{"ports":[{"name":"http","port":11434,"protocol":"TCP","targetPort":11434}]}}
+    creationTimestamp: "2026-03-01T14:59:15Z"
+    labels:
+      app: ollama
+      app.kubernetes.io/part-of: caal
+    name: ollama
+    namespace: caal
+    resourceVersion: "149229"
+    uid: 7370a058-4c8b-425a-86e1-57c13e747a91
+  spec:
+    clusterIP: 10.152.183.236
+    clusterIPs:
+    - 10.152.183.236
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      port: 11434
+      protocol: TCP
+      targetPort: 11434
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"speaches","app.kubernetes.io/part-of":"caal"},"name":"speaches","namespace":"caal"},"spec":{"ports":[{"name":"http","port":8000,"targetPort":8000}],"selector":{"app":"speaches"},"type":"ClusterIP"}}
+    creationTimestamp: "2026-03-01T14:59:14Z"
+    labels:
+      app: speaches
+      app.kubernetes.io/part-of: caal
+    name: speaches
+    namespace: caal
+    resourceVersion: "149100"
+    uid: 6c0cf30f-cafa-4601-8144-bcf724a9ba9c
+  spec:
+    clusterIP: 10.152.183.213
+    clusterIPs:
+    - 10.152.183.213
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
+    selector:
+      app: speaches
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{"metallb.universe.tf/loadBalancerIPs":"REDACTED"},"labels":{"app":"speaches","app.kubernetes.io/part-of":"caal"},"name":"speaches-external","namespace":"caal"},"spec":{"ports":[{"name":"http","port":8000,"targetPort":8000}],"selector":{"app":"speaches"},"type":"LoadBalancer"}}
+      metallb.io/ip-allocated-from-pool: default-addresspool
+      metallb.universe.tf/loadBalancerIPs: REDACTED
+    creationTimestamp: "2026-03-02T15:52:18Z"
+    labels:
+      app: speaches
+      app.kubernetes.io/part-of: caal
+    name: speaches-external
+    namespace: caal
+    resourceVersion: "352939"
+    uid: f09b5837-2595-4403-b4bd-9f8e87cbae41
+  spec:
+    allocateLoadBalancerNodePorts: true
+    clusterIP: 10.152.183.118
+    clusterIPs:
+    - 10.152.183.118
+    externalTrafficPolicy: Cluster
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      nodePort: 32673
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
+    selector:
+      app: speaches
+    sessionAffinity: None
+    type: LoadBalancer
+  status:
+    loadBalancer:
+      ingress:
+      - ip: REDACTED
+        ipMode: VIP
+kind: List
+metadata:
+  resourceVersion: ""
