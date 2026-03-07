@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    metallb.universe.tf/loadBalancerIPs: 172.16.5.249
+  labels:
+    app: cups-airprint
+  name: cups-airprint
+  namespace: print
+spec:
+  ports:
+  - name: ipp
+    port: 631
+    protocol: TCP
+    targetPort: 631
+  selector:
+    app: cups-airprint
+  type: LoadBalancer

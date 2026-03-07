@@ -1,0 +1,165 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cups-airprint
+  namespace: print
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cups-airprint
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: cups-airprint
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+      - name: cups
+        image: ubuntu:24.04
+        command: ["/bin/bash", "-lc"]
+        args:
+        - |
+          set -eux
+          export DEBIAN_FRONTEND=noninteractive
+
+          apt-get update
+          apt-get install -y \
+            cups \
+            cups-filters \
+            cups-ipp-utils \
+            printer-driver-splix \
+            avahi-daemon \
+            avahi-utils \
+            dbus
+
+          mkdir -p /run/dbus /var/run/dbus /run/avahi-daemon /run/cups
+
+          dbus-daemon --system --fork
+
+          # Find the interface that holds the default-route source IP (handles bridge setups)
+          DEFAULT_SRC=$(ip route get 8.8.8.8 2>/dev/null | awk '{for(i=1;i<=NF;i++) if($i=="src") print $(i+1)}' | head -1)
+          PHYS_IFACE=$(ip -o addr show | awk -v ip="$DEFAULT_SRC" '{split($4,a,"/"); if(a[1]==ip) print $2}' | head -1)
+          PHYS_IFACE=${PHYS_IFACE:-br0}
+          sed -i \
+            -e "s/^#*allow-interfaces=.*/allow-interfaces=${PHYS_IFACE}/" \
+            -e 's/^#*deny-interfaces=.*/#&/' \
+            /etc/avahi/avahi-daemon.conf
+          echo "Avahi restricted to interface: ${PHYS_IFACE}"
+
+          avahi-daemon --daemonize --no-chroot
+
+          # Pre-configure cupsd.conf
+          cat > /etc/cups/cupsd.conf << 'EOF'
+          LogLevel warn
+          MaxLogSize 0
+          Listen /run/cups/cups.sock
+          Listen 0.0.0.0:631
+          ServerAlias *
+          DefaultAuthType Basic
+          WebInterface Yes
+          <Location />
+            Order allow,deny
+            Allow all
+          </Location>
+          <Location /admin>
+            Order allow,deny
+            Allow all
+          </Location>
+          <Location /admin/conf>
+            AuthType Default
+            Require user @SYSTEM
+            Order allow,deny
+            Allow all
+          </Location>
+          <Policy default>
+            <Limit Send-Document Send-URI Hold-Job Release-Job Restart-Job Purge-Jobs Set-Job-Attributes Create-Job-Subscription Renew-Subscription Cancel-Subscription Get-Notifications Reprocess-Job Cancel-Current-Job Suspend-Current-Job Resume-Job Cancel-My-Jobs Close-Job CUPS-Move-Job CUPS-Get-Document>
+              Require user @OWNER @SYSTEM
+              Order deny,allow
+            </Limit>
+            <Limit All>
+              Order deny,allow
+            </Limit>
+          </Policy>
+          EOF
+
+          # Start CUPS in foreground-daemon mode and wait for its socket
+          /usr/sbin/cupsd -f &
+          CUPS_PID=$!
+
+          echo "Waiting for CUPS socket..."
+          for i in $(seq 1 30); do
+            if [ -S /run/cups/cups.sock ]; then
+              echo "CUPS socket ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+
+          if [ ! -S /run/cups/cups.sock ]; then
+            echo "ERROR: CUPS socket never appeared" >&2
+            exit 1
+          fi
+
+          cupsctl --remote-admin --remote-any --share-printers || true
+
+          # Add Samsung SCX-3400 printer (using closest SPlix driver: SCX-3200)
+          lpadmin -p scx3400 -E \
+            -v socket://172.16.5.112:9100 \
+            -m drv:///splix-samsung.drv/scx3200.ppd \
+            -o printer-is-shared=true
+          cupsenable scx3400
+          cupsaccept scx3400
+
+          # Publish printer via Avahi for AirPrint discovery (iPhone/Mac)
+          mkdir -p /etc/avahi/services
+          cat > /etc/avahi/services/scx3400-airprint.service << 'AVAHI'
+          <?xml version="1.0" standalone='no'?>
+          <!DOCTYPE service-group SYSTEM "avahi-service.dtd">
+          <service-group>
+            <name replace-wildcards="yes">Samsung SCX-3400 @ %h</name>
+            <service>
+              <type>_ipp._tcp</type>
+              <subtype>_universal._sub._ipp._tcp</subtype>
+              <port>631</port>
+              <txt-record>txtvers=1</txt-record>
+              <txt-record>qtotal=1</txt-record>
+              <txt-record>rp=printers/scx3400</txt-record>
+              <txt-record>ty=Samsung SCX-3400</txt-record>
+              <txt-record>product=(GPL Ghostscript)</txt-record>
+              <txt-record>note=Samsung SCX-3400</txt-record>
+              <txt-record>priority=0</txt-record>
+              <txt-record>printer-state=3</txt-record>
+              <txt-record>printer-type=0x809006</txt-record>
+              <txt-record>Color=F</txt-record>
+              <txt-record>Duplex=F</txt-record>
+              <txt-record>Fax=F</txt-record>
+              <txt-record>Scan=F</txt-record>
+              <txt-record>Copies=T</txt-record>
+              <txt-record>Binary=T</txt-record>
+              <txt-record>Transparent=T</txt-record>
+              <txt-record>urf=W8,SRGB24,CP1,RS600</txt-record>
+              <txt-record>pdl=application/octet-stream,application/pdf,application/postscript,image/vnd.cups-raster,image/jpeg,image/png,image/pwg-raster,image/urf</txt-record>
+            </service>
+          </service-group>
+          AVAHI
+
+          # Signal avahi-daemon to reload and pick up the new service file
+          pkill -HUP avahi-daemon || true
+
+          echo "--- Printer status ---"
+          lpstat -t
+
+          wait "$CUPS_PID"
+        ports:
+        - containerPort: 631
+          hostPort: 631
+          protocol: TCP
+        - containerPort: 5353
+          hostPort: 5353
+          protocol: UDP
+        securityContext:
+          privileged: true
